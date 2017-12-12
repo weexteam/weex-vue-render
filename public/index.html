@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Weex Preview</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="format-detection" content="telephone=no, email=no">
+  <link rel="stylesheet" href="./assets/style.css">
+  <script src="./assets/qrcode.js"></script>
+  <script src="./assets/vue.min.js"></script>
+</head>
+<body>
+  <h1>Weex Preview</h1>
+  <div id="app"></div>
+  <template id="app-template">
+    <div id="app">
+      <div class="mock-phone">
+        <div class="inner">
+          <iframe id="preview" src="./vue.html?phantom_limb=true"></iframe>
+        </div>
+        <div class="camera"></div>
+        <div class="earpiece"></div>
+        <div class="home-btn"></div>
+      </div>
+      <div id="qrcode">
+        <h3>Web QRCode</h3>
+        <a :href="webUrl" target="_blank">
+          <canvas class="canvas" ref="webCanvas" width="150" height="150"></canvas>
+          <p class="bundle-url">Web Preview Link</p>
+        </a>
+        <h3>Native QRCode</h3>
+        <a :href="nativeUrl" target="_blank">
+          <canvas class="canvas" ref="nativeCanvas" width="150" height="150"></canvas>
+          <p class="bundle-url">Native Preview Link</p>
+        </a>
+        <br/>
+      </div>
+    </div>
+  </template>
+  <script src="./assets/index-app.js"></script>
+</body>
+</html>
