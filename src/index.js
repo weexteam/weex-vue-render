@@ -64,8 +64,6 @@ if (typeof window !== 'undefined' && window.Vue) {
   init(window.Vue)
 }
 
-console.log('weex init!')
-
 weex.init = init
 
 export default weex

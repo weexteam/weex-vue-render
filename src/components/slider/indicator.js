@@ -17,7 +17,7 @@
  * under the License.
  */
 
-let getComponentInlineStyle, extend, rem2px
+let getComponentInlineStyle
 
 function getIndicatorItemStyle (ms, isActive) {
   const style = {}
@@ -29,34 +29,34 @@ function getIndicatorItemStyle (ms, isActive) {
   return style
 }
 
-function getScopeId (context) {
-  let scopeId = context._scopeId
-  if (scopeId) {
-    return scopeId
+function getScopeIds (context) {
+  let scopeIds = context._scopeIds
+  if (scopeIds) {
+    return scopeIds
+  }
+  else {
+    scopeIds = []
   }
   let parent = context.$parent
   while (parent) {
     let i
-    if ((i = parent.$options) && i._scopeId) {
-      scopeId = i._scopeId
-      context._scopeId = scopeId
-      return scopeId
+    if ((i = parent.$options) && (i = i._scopeId)) {
+      scopeIds.push(i)
     }
     parent = parent.$parent
   }
+  context._scopeIds = scopeIds
+  return scopeIds
 }
 
 function _render (context, h) {
   const children = []
   const mergedStyle = getComponentInlineStyle(context)
-  const scopeId = getScopeId(context)
-  // const indicatorSpecStyle = extendKeys(
-  //     {},
-  //     mergedStyle,
-  //     ['itemColor', 'itemSelectedColor', 'itemSize']
-  //   )
+  const scopeIds = getScopeIds(context)
   const attrs = {}
-  attrs[scopeId] = ''
+  for (let i = 0, l = scopeIds.length; i < l; i++) {
+    attrs[scopeIds[i]] = ''
+  }
   for (let i = 0; i < Number(context.count); ++i) {
     const classNames = ['weex-indicator-item weex-el']
     let isActive = false
@@ -70,87 +70,10 @@ function _render (context, h) {
       staticStyle: getIndicatorItemStyle(mergedStyle, isActive)
     }))
   }
-  context.$nextTick(function () {
-    _reLayout(this, _getVirtualRect(this, mergedStyle), _getLtbr(this, mergedStyle))
-  })
   return h('nav', {
     attrs: { 'weex-type': 'indicator' },
     staticClass: 'weex-indicator weex-ct'
   }, children)
-}
-
-/**
- * get indicator's virtual rect (width, height).
- */
-function _getVirtualRect (context, mergedStyle) {
-  const ct = context._getParentRect()
-  const rect = ['width', 'height'].reduce((pre, key) => {
-    const msv = mergedStyle && mergedStyle[key]
-    pre[key] = msv ? parseFloat(rem2px(msv)) : ct[key]
-    return pre
-  }, {})
-  return rect
-}
-
-/**
- * get indicator's ltbr values (without units).
- */
-function _getLtbr (context, mergedStyle) {
-  return ['left', 'top', 'bottom', 'right'].reduce((pre, key) => {
-    const msv = mergedStyle && mergedStyle[key]
-    if (!msv && msv !== 0) { return pre }
-    pre[key] = parseFloat(rem2px(msv))
-    return pre
-  }, {})
-}
-
-/**
- * get indicator's rect (width, height).
- */
-function _getIndicatorRect (el) {
-  let width, height
-  if (el.children.length === 1) {
-    const itemComputedStyle = window.getComputedStyle(el.children[0])
-    width = parseFloat(itemComputedStyle.width)
-    height = parseFloat(itemComputedStyle.height)
-  }
-  else {
-    const itemComputedStyle = window.getComputedStyle(el.children[1])
-    const padding = parseFloat(itemComputedStyle.marginLeft)
-    height = parseFloat(itemComputedStyle.height)
-    width = el.children.length * (height + padding) - padding
-  }
-  return { width, height }
-}
-
-/**
- * calculate and reset indicator's width, height, and ltbr.
- * @param {object} virtualRect. width and height of indicator's virtual rect box.
- * @param {object} ltbr. the user specified left, top, bottom, right pixels (without units).
- */
-function _reLayout (context, virtualRect, ltbr) {
-  const el = context.$el
-  const rect = _getIndicatorRect(el)
-  const rectWithPx = Object.keys(rect).reduce((pre, key) => {
-    pre[key] = rect[key] + 'px'
-    return pre
-  }, {})
-  extend(el.style, rectWithPx)
-  const axisMap = [{
-    dir: ltbr.left || ltbr.left === 0
-      ? 'left' : ltbr.right || ltbr.right === 0
-        ? 'right' : 'left',
-    scale: 'width'
-  }, {
-    dir: ltbr.top || ltbr.top === 0
-      ? 'top' : ltbr.bottom || ltbr.bottom === 0
-        ? 'bottom' : 'top',
-    scale: 'height'
-  }]
-  Object.keys(axisMap).forEach(key => {
-    const { dir, scale } = axisMap[key]
-    el.style[dir] = (ltbr[dir] || 0) + virtualRect[scale] / 2 - rect[scale] / 2 + 'px'
-  })
 }
 
 const indicator = {
@@ -183,8 +106,6 @@ const indicator = {
 export default {
   init (weex) {
     getComponentInlineStyle = weex.getComponentInlineStyle
-    extend = weex.utils.extend
-    rem2px = weex.utils.rem2px
     weex.registerComponent('indicator', indicator)
   }
 }

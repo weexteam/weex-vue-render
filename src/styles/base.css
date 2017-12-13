@@ -27,6 +27,15 @@ div.weex-root {
   min-height: 100%;
 }
 
+/**
+ * slider will overflow in horizontal axis, which will cause container
+ * horizontally expanding. below styles will prevent this from happening.
+ */
+.weex-root {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 .weex-root figure {
   background-repeat: no-repeat;
   background-position: 50% 50%;
