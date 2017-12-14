@@ -1,7 +1,7 @@
 {
   "name": "weex-vue-render",
   "description": "Web renderer for weex project.",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "license": "Apache-2.0",
   "main": "dist/index.common.js",
   "keywords": [

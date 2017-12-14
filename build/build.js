@@ -230,7 +230,6 @@ function build (name) {
     console.log(`\n => start to build ${name} (${chalk.green(pkgName)}) Ver ${chalk.green(version)}\n`)
     return new Promise((resolve, reject) => {
       return runRollup(config).then(() => {
-        // copy outputFile to public/assets
         const outputFile = config.output.file
         const basename = path.basename(outputFile).replace('index', 'render')
         fs.copy(config.output.file, utils.resolve(`public/assets/${basename}`))

@@ -28,21 +28,21 @@ import { extend } from '../utils/func'
  *
  */
 let isInited = false
-// const DEFAULT_VIEWPORT_WIDTH = 750
+const DEFAULT_VIEWPORT_WIDTH = 750
 
 /**
  * get viewport width from weex-viewport meta.
  */
-// const envViewportWidth = parseInt(process.env.VIEWPORT_WIDTH)
-// let width = !isNaN(envViewportWidth) && envViewportWidth > 0
-//   ? envViewportWidth
-//   : DEFAULT_VIEWPORT_WIDTH
+const envViewportWidth = parseInt(process.env.VIEWPORT_WIDTH)
+let width = !isNaN(envViewportWidth) && envViewportWidth > 0
+  ? envViewportWidth
+  : DEFAULT_VIEWPORT_WIDTH
 
 let wxViewportMeta = document.querySelector('meta[name="weex-viewport"]')
-// const metaWidth = wxViewportMeta && parseInt(wxViewportMeta.getAttribute('content'))
-// if (metaWidth && !isNaN(metaWidth) && metaWidth > 0) {
-//   width = metaWidth
-// }
+const metaWidth = wxViewportMeta && parseInt(wxViewportMeta.getAttribute('content'))
+if (metaWidth && !isNaN(metaWidth) && metaWidth > 0) {
+  width = metaWidth
+}
 
 let dpr = 0
 let screenWidth = 0
@@ -87,7 +87,7 @@ function setMetaViewport (width) {
 /**
  * export viewport info.
  */
-export function init (viewportWidth) {
+export function init (viewportWidth = width) {
   if (!isInited) {
     isInited = true
 
@@ -113,7 +113,7 @@ export function init (viewportWidth) {
 
     // set root font for rem.
     setRootFont(screenWidth)
-    // setMetaViewport(viewportWidth)
+    setMetaViewport(viewportWidth)
 
     window.addEventListener('resize', resetDeviceHeight)
 
