@@ -366,7 +366,14 @@ export function px2rem (px, rootValue) {
       return $1 + 'px'
     }
     else {  // 'px' -> rem
-      return parseFloat($1)
+      const pxVal = parseFloat($1)
+      const sign = Math.sign(pxVal)
+      if (Math.abs(pxVal) <= 1) {
+        return supportHairlines()
+          ? `${sign * 0.5}px`
+          : `${sign * 1}px`
+      }
+      return pxVal
         / (rootValue || window.weex.config.env.rem)
         + 'rem'
     }

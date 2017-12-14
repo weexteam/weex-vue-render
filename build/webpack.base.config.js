@@ -43,7 +43,22 @@ function getEntries (isNative) {
 
 function getWebEntries () {
   del.sync(resolve('examples/bundle-entry/web/**'))
-  return getEntries(false)
+  const entries = getEntries(false)
+  // for test.
+  // const entryDir = 'web'
+  // const entryName = 'hello'
+  // const entryPath = path.join(entryDir, entryName)
+  // fs.outputFileSync(
+  //   resolve(path.join('examples/bundle-entry', entryPath + '.js')),
+  //   getEntryFileContent(
+  //     resolve(path.join('examples', entryName + '.vue')),
+  //     false
+  //   )
+  // )
+  // const entries = {}
+  // entries[`${entryDir}/${entryName}`]
+  //   = resolve('examples/bundle-entry/web/hello.js')
+  return entries
 }
 
 function getNativeEntries () {

@@ -1,14 +1,24 @@
+var path = require('path')
+var fs = require('fs-extra')
 var express = require('express')
-var webpackConfigs = require('./webpack.dev.config')
 var webpack = require('webpack')
 var merge = require('webpack-merge')
 var opn = require('opn')
 var ip = require('ip').address()
+var webpackConfigs = require('./webpack.dev.config')
+var resolve = require('./utils').resolve
 var config = require('../config')
 var port = config.dev.port
 
 var webWebpackConfig = webpackConfigs[0]
 var nativeWebpackConfig = webpackConfigs[1]
+
+// copy vue.runtime.js to public/assets
+const vueRuntimeFile = require.resolve('vue/dist/vue.runtime.js')
+fs.copy(
+	vueRuntimeFile,
+	resolve(path.join('public/assets', path.basename(vueRuntimeFile)))
+)
 
 var app = express()
 var compiler = webpack(webWebpackConfig)

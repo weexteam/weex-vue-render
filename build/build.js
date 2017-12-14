@@ -18,7 +18,7 @@
  */
 "use strict"
 
-const fs = require('fs')
+const fs = require('fs-extra')
 const path = require('path')
 const gzip = require('zlib').createGzip()
 const webpack = require('webpack')
@@ -230,14 +230,16 @@ function build (name) {
     console.log(`\n => start to build ${name} (${chalk.green(pkgName)}) Ver ${chalk.green(version)}\n`)
     return new Promise((resolve, reject) => {
       return runRollup(config).then(() => {
-        let p = Promise.resolve()
+        // copy outputFile to public/assets
+        const outputFile = config.output.file
+        const basename = path.basename(outputFile).replace('index', 'render')
+        fs.copy(config.output.file, utils.resolve(`public/assets/${basename}`))
         const cjsConfig = getConfig(pkgName, false, {
           format: 'cjs',
           _isProd: true
         })
-        const outputFile = cjsConfig.output.file
         cjsConfig.output.file = outputFile.replace(/\.js$/, '.common.js')
-        p = runRollup(cjsConfig)
+        const p = runRollup(cjsConfig)
         return p.then(function () {
           return runRollup(minifyConfig).then(() => {
             zip(minifyConfig.output.file, resolve)

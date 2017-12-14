@@ -16,6 +16,61 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import { hyphenate } from './utils'
+
+const scaleStyles = [
+  'width',
+  'height',
+  'left',
+  'right',
+  'top',
+  'bottom',
+  'border',
+  'borderRadius',
+  'borderWidth',
+  'borderLeft',
+  'borderRight',
+  'borderTop',
+  'borderBottom',
+  'borderLeftWidth',
+  'borderRightWidth',
+  'borderTopWidth',
+  'borderBottomWidth',
+  'margin',
+  'marginLeft',
+  'marginRight',
+  'marginTop',
+  'marginBottom',
+  'padding',
+  'paddingLeft',
+  'paddingRight',
+  'paddingTop',
+  'paddingBottom',
+  'fontSize',
+  'lineHeight',
+  'transform',
+  'webkitTransform',
+  'WebkitTransform',
+  'mozTransform',
+  'MozTransform',
+  'itemSize'
+]
+
+const vendorReg = /webkit|moz/i
+function hyphen (key) {
+  return hyphenate(key.replace(vendorReg, function ($0) {
+    return `-${$0.toLowerCase()}-`
+  }))
+}
+
+function getAllStyles () {
+  return Object.keys(scaleStyles.reduce(function (pre, key) {
+    pre[key] = 1
+    pre[hyphen(key)] = 1
+    return pre
+  }, {}))
+}
+
 export default {
   scrollableTypes: ['scroller', 'list', 'waterfall'],
   gestureEvents: [
@@ -26,40 +81,5 @@ export default {
     'longpress',
     'tap'
   ],
-  bindingStyleNamesForPx2Rem: [
-    'width',
-    'height',
-    'left',
-    'right',
-    'top',
-    'bottom',
-    'border',
-    'border-radius',
-    'borderWidth',
-    'borderLeft',
-    'borderRight',
-    'borderTop',
-    'borderBottom',
-    'borderLeftWidth',
-    'borderRightWidth',
-    'borderTopWidth',
-    'borderBottomWidth',
-    'margin',
-    'marginLeft',
-    'marginRight',
-    'marginTop',
-    'marginBottom',
-    'padding',
-    'paddingLeft',
-    'paddingRight',
-    'paddingTop',
-    'paddingBottom',
-    'fontSize',
-    'line-height',
-    'transform',
-    'webkitTransform',
-    'WebkitTransform',
-    'mozTransform',
-    'MozTransform'
-  ]
+  bindingStyleNamesForPx2Rem: getAllStyles()
 }
