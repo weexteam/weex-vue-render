@@ -1,17 +1,18 @@
-var path = require('path')
-var fs = require('fs-extra')
-var express = require('express')
-var webpack = require('webpack')
-var merge = require('webpack-merge')
-var opn = require('opn')
-var ip = require('ip').address()
-var webpackConfigs = require('./webpack.dev.config')
-var resolve = require('./utils').resolve
-var config = require('../config')
-var port = config.dev.port
+const path = require('path')
+const fs = require('fs-extra')
+const express = require('express')
+const webpack = require('webpack')
+const merge = require('webpack-merge')
+const opn = require('opn')
+const ip = require('ip').address()
+const webpackConfigs = require('./webpack.dev.config')
+const resolve = require('./utils').resolve
+const config = require('../config')
+const { getWebEntries, getNativeEntries } = require('./get-entries')
+const port = config.dev.port
 
-var webWebpackConfig = webpackConfigs[0]
-var nativeWebpackConfig = webpackConfigs[1]
+const webWebpackConfig = webpackConfigs[0]
+const nativeWebpackConfig = webpackConfigs[1]
 
 // copy vue.runtime.js to public/assets
 const vueRuntimeFile = require.resolve('vue/dist/vue.runtime.js')
@@ -20,10 +21,19 @@ fs.copy(
 	resolve(path.join('public/assets', path.basename(vueRuntimeFile)))
 )
 
-var app = express()
-var compiler = webpack(webWebpackConfig)
+const app = express()
+
+const webEntries = getWebEntries()
+Object.keys(webEntries).forEach(function (name) {
+  webEntries[name] = [config.dev.clientPath].concat(webEntries[name])
+})
+console.log(webEntries)
+const compiler = webpack(merge(webWebpackConfig, {
+	entry: webEntries
+}))
 
 webpack(merge(nativeWebpackConfig, {
+	entry: getNativeEntries(),
 	watch: true,
 	watchOptions: {
 		ignored: /node_modules/
@@ -38,9 +48,9 @@ webpack(merge(nativeWebpackConfig, {
 	}
 })
 
-var autoOpen = true
+const autoOpen = true
 
-var devMiddleware = require('webpack-dev-middleware')(compiler, {
+const devMiddleware = require('webpack-dev-middleware')(compiler, {
   // publicPath is required, whereas all other options are optional
 	noInfo: true,
   publicPath: webWebpackConfig.output.publicPath,
@@ -49,7 +59,7 @@ var devMiddleware = require('webpack-dev-middleware')(compiler, {
 	}
 })
 
-var hotMiddleware = require('webpack-hot-middleware')(compiler, {
+const hotMiddleware = require('webpack-hot-middleware')(compiler, {
 	path: '/__weex_hmr'
 })
 
@@ -58,7 +68,7 @@ app.use(hotMiddleware)
 
 app.use(express.static('public'))
 
-var uri = 'http://' + ip + ':' + port + '/'
+const uri = 'http://' + ip + ':' + port + '/'
 
 console.log('> Starting dev server...')
 devMiddleware.waitUntilValid(() => {
@@ -68,4 +78,4 @@ devMiddleware.waitUntilValid(() => {
   }
 })
 
-var server = app.listen(port)
+const server = app.listen(port)

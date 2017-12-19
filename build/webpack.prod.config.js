@@ -7,8 +7,6 @@ var configs = require('./webpack.base.config')
 var webConfig = configs[0]
 var nativeConig = configs[1]
 
-var env = config.build.env
-
 webConfig = merge(webConfig, {
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   plugins: [
@@ -17,7 +15,7 @@ webConfig = merge(webConfig, {
       verbose: false
     }),
     new webpack.DefinePlugin({
-      'process.env': env
+      'process.env': config.build.env
     }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {

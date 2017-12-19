@@ -170,6 +170,16 @@ function updateWatchAppearList (container) {
 }
 
 /**
+ * inject removeChild function to watch disappear and offsetDisappear events.
+ */
+const nativeRemove = HTMLElement.prototype.removeChild
+HTMLElement.prototype.removeChild = function (el) {
+  el._visible && triggerEvent(el, 'disappear', null)
+  el._offsetVisible && triggerEvent(el, 'offsetDisappear', null)
+  nativeRemove.apply(this, arguments)
+}
+
+/**
  * Watch element's visibility to tell whether should trigger a appear/disappear
  * event in scroll handler.
  */
@@ -185,8 +195,9 @@ export function watchAppear (context, fireNow) {
   /**
    * Code below will only exec once for binding scroll handler for parent container.
    */
-  if (!container._scrollHandler) {
-    const scrollHandler = event => {
+  let scrollHandler = container._scrollHandler
+  if (!scrollHandler) {
+    scrollHandler = container._scrollHandler = event => {
       updateWatchAppearList(container)
       /**
        * detect scrolling direction.
@@ -209,11 +220,10 @@ export function watchAppear (context, fireNow) {
         detectAppear(el, visibleData, dir)
       }
     }
-    if (fireNow) {
-      scrollHandler()
-    }
-    container._scrollHandler = throttle(scrollHandler, 100, true)
-    container.addEventListener('scroll', container._scrollHandler)
+    container.addEventListener('scroll', throttle(scrollHandler, 100, true))
+  }
+  if (fireNow) {
+    scrollHandler()
   }
 }
 
@@ -237,24 +247,24 @@ export function detectAppear (el, visibleData, dir = null, appearOffset) {
    */
   if (el._appearedOnce || visible) {
     if (el._visible !== visible) {
-      if (!el._appearedOnce) {
-        el._appearedOnce = true
-      }
-      el._visible = visible
       const evtName = visible ? 'appear' : 'disappear'
       if (el.getAttribute(`data-evt-${evtName}`) === '') {
+        if (!el._appearedOnce) {
+          el._appearedOnce = true
+        }
+        el._visible = visible
         triggerEvent(el, evtName, dir)
       }
     }
   }
   if (el._offsetAppearedOnce || offsetVisible) {
     if (el._offsetVisible !== offsetVisible) {
-      if (!el._offsetAppearedOnce) {
-        el._offsetAppearedOnce = true
-      }
-      el._offsetVisible = offsetVisible
       const evt = offsetVisible ? ['offset-appear', 'offsetAppear'] : ['offset-disappear', 'offsetDisappear']
       if (el.getAttribute(`data-evt-${evt[0]}`) === '') {
+        if (!el._offsetAppearedOnce) {
+          el._offsetAppearedOnce = true
+        }
+        el._offsetVisible = offsetVisible
         triggerEvent(el, evt[1], dir)
       }
     }

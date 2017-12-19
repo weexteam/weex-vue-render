@@ -1,26 +1,28 @@
 {
   "name": "weex-vue-render",
   "version": "1.0.7",
-  "description": "Weex built-in components for Vue 2.x.",
+  "description": "Web renderer for weex project.",
   "license": "Apache-2.0",
   "main": "dist/index.common.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:apache/incubator-weex.git"
+    "url": "git@github.com:MrRaindrop/weex-vue-render.git"
   },
-  "homepage": "http://weex.apache.org/",
+  "homepage": "https://github.com/MrRaindrop/weex-vue-render",
   "bugs": {
-    "url": "https://issues.apache.org/jira/browse/WEEX/"
+    "url": "https://github.com/MrRaindrop/weex-vue-render/issues"
   },
   "keywords": [
     "weex",
     "vue",
     "web",
-    "render"
-  ],
-  "dependencies": {
-    "core-js": "^2.4.1",
-    "httpurl": "^0.1.1",
-    "query-string": "^4.3.2"
-  }
+    "h5-render",
+    "web-render",
+    "renderer",
+    "weex-vue",
+    "weex-vue-render",
+    "weex-web",
+    "weex-h5",
+    "next"
+  ]
 }

@@ -1,3 +1,11 @@
+# Editor directories and files
+.DS_Store
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
 # Logs
 logs
 *.log
@@ -60,7 +68,7 @@ typings/
 # ///////////////////////////
 
 # examples build
-examples/test
+examples/debug
 examples/bundle-entry
 
 # dist

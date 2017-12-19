@@ -1,19 +1,53 @@
 process.env.NODE_ENV = 'production'
 
-var path = require('path')
-var ora = require('ora')
-var chalk = require('chalk')
-var webpack = require('webpack')
-var config = require('../config')
-var configs = require('./webpack.prod.config')
+const path = require('path')
+const ora = require('ora')
+const chalk = require('chalk')
+const del = require('del')
+const webpack = require('webpack')
+const merge = require('webpack-merge')
+const config = require('../config')
+const webpackConfigs = require('./webpack.prod.config')
+const {
+  getTestEntries,
+  getWebEntries,
+  getNativeEntries
+} = require('./get-entries')
+const resolve = require('./utils').resolve
 
-var webConfig = configs[0]
-var nativeConfig = configs[1]
+let isTest = false
+const argv = process.argv[2]
+if (argv === '--test') {
+  // build for tests.
+  isTest = true
+}
 
-var spinner = ora('building for production...')
+let webConfig = merge(webpackConfigs[0], {
+  entry: isTest ? getTestEntries() : getWebEntries()
+})
+if (isTest) {
+  // remove uglify plugin.
+  webConfig.plugins.pop()
+  webConfig = merge(webConfig, {
+    output: {
+      path: resolve('test/bundles'),
+      publicPath: '/bundles/',
+      library: 'bundle',
+      libraryTarget: 'umd'
+    },
+    devtool: false
+  })
+  del.sync(resolve('test/bundles'))
+}
+
+const finalConfig = isTest
+  ? webConfig
+  : [webConfig, merge(webpackConfigs[1], { entry: getNativeEntries() })]
+
+const spinner = ora(`building examples for ${isTest ? 'test' : 'production'}...`)
 spinner.start()
 
-webpack(configs, function (err, stats) {
+webpack(finalConfig, function (err, stats) {
   spinner.stop()
   if (err) throw err
   process.stdout.write(stats.toString({

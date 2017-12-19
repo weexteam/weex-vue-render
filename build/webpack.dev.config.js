@@ -24,8 +24,4 @@ webConfig = merge(webConfig, {
   ]
 })
 
-Object.keys(webConfig.entry).forEach(function (name) {
-  webConfig.entry[name] = [config.dev.clientPath].concat(webConfig.entry[name])
-})
-
 module.exports = [webConfig, nativeConfig]

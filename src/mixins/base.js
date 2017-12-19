@@ -18,7 +18,8 @@
  */
 import {
   getThrottleLazyload,
-  watchAppear
+  watchAppear,
+  debounce
 } from '../utils'
 
 import config from '../config'
@@ -48,6 +49,16 @@ let idCnt = 0
 let appearWatched = false
 
 /**
+ * during updating, the appear watcher binding on the appearWatched context
+ * should be triggered within a debounced wrapper.
+ * If the updating interval is shorter then 50 ms, then the appear events will
+ * ignore the change in the previous 50 ms due to the debounce wrapper.
+ */
+const debouncedWatchAppear = debounce(function () {
+  watchAppear(appearWatched, true)
+}, 50)
+
+/**
  * if it's a scrollable tag, then watch appear events for it.
  */
 function watchAppearForScrollables (tagName, context) {
@@ -55,7 +66,7 @@ function watchAppearForScrollables (tagName, context) {
   if (scrollableTypes.indexOf(tagName) > -1) {
     const sd = context.scrollDirection
     if (!sd || sd !== 'horizontal') {
-      appearWatched = true
+      appearWatched = context
       watchAppear(context, true)
     }
   }
@@ -87,7 +98,8 @@ export default {
       metaUp[tagName] = 0
     }
     metaUp[tagName]++
-
+    // will check appearing when no other changes in latest 50ms.
+    debouncedWatchAppear()
     /**
      * since the updating of component may affect the layout, the lazyloading should
      * be fired.
@@ -133,6 +145,7 @@ export default {
        * Then the appear watcher should be attached on the body.
        */
       if (!appearWatched) {
+        appearWatched = this
         watchAppear(this, true)
       }
 

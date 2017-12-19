@@ -117,7 +117,7 @@ const configs = {
   // }
 }
 
-function getConfig (name, minify, params) {
+const getConfig = function (name, minify, params) {
   const opt = configs[name]
   let isProd
   if (params) {
@@ -159,6 +159,7 @@ function getConfig (name, minify, params) {
 
   return config
 }
+exports.getConfig = getConfig
 
 let isWatch = false
 if (process.argv[3]) {
@@ -171,6 +172,16 @@ if (process.argv[2]) {
 }
 else {
   console.log('\nPlease specify the package you want to build. [native, runtime, browser, vue]')
+}
+
+function copyVersion (pkgName) {
+  if (pkgName === 'vue') {
+    const fromPkg = fs.readJsonSync(resolve('package.json'))
+    const toPkgPath = resolve('packages/weex-vue-render')
+    const toPkg = fs.readJsonSync(toPkgPath)
+    toPkg.version = fromPkg.version
+    fs.outputJsonSync(toPkgPath, toPkg)
+  }
 }
 
 function runRollupOnWatch(config) {
@@ -218,6 +229,8 @@ function build (name) {
     case 'vue': pkgName = 'weex-vue-render'; break;
     case 'core': pkgName = 'weex-vue-render-core'; break;
     case 'plugins': pkgName = 'weex-vue-render-plugins'; break;
+    default:
+      return;
   }
 
   const config = getConfig(pkgName)
@@ -233,6 +246,8 @@ function build (name) {
         const outputFile = config.output.file
         const basename = path.basename(outputFile).replace('index', 'render')
         fs.copy(config.output.file, utils.resolve(`public/assets/${basename}`))
+        // cpy version info to packages/weex-vue-render
+        copyVersion(pkgName)
         const cjsConfig = getConfig(pkgName, false, {
           format: 'cjs',
           _isProd: true
