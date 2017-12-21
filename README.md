@@ -130,10 +130,10 @@ You should use the previous mentioned plugins in your vue-loader configuration.
 ## Develop
 
 ```shell
-// build for weex-vue-render package
+# build for weex-vue-render package
 npm run build
-// debug and serve examples
+# debug and serve examples
 npm run dev
-// build and run test cases
+# build and run test cases
 npm run test
 ```
