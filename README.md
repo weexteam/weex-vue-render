@@ -2,6 +2,12 @@
 
 Web renderer for weex project. Support Vue 2.x syntax.
 
+![build](https://travis-ci.org/MrRaindrop/weex-vue-render.svg?branch=master)
+[![vuejs2.x](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://img.shields.io/badge/vue-2.x-brightgreen.svg)
+[![pkg](https://img.shields.io/npm/v/weex-vue-render.svg?style=flat)](https://npmjs.com/package/weex-vue-render)
+[![down](https://img.shields.io/npm/dm/weex-vue-render.svg)](https://npmjs.com/package/weex-vue-render)
+[![Package Quality](http://npm.packagequality.com/shield/weex-vue-render.svg)](http://packagequality.com/#?package=weex-vue-render)
+
 ## How To Use
 
 We strongly suggest you use v1.x instead of 0.12.x, according to performance issue.

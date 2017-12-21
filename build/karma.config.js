@@ -77,8 +77,8 @@ module.exports = function (config) {
       '../test/data/**/*.js'
     ],
 
-    singleRun: false,
-    // singleRun: true,
+    // singleRun: false,
+    singleRun: true,
 
     reporters: ['mocha', 'coverage'],
     coverageReporter: {
