@@ -36,3 +36,16 @@ export function nodeListToArray (obj) {
 export function isPhantom () {
   return window.navigator.userAgent.indexOf('PhantomJS') !== -1
 }
+
+export function dispatchEvent (dom, type, opts) {
+  const evt = new Event(type, { bubbles: true, cancelable: true })
+  dom.dispatchEvent(evt)
+}
+
+export function once (dom, type, listener) {
+  const handler = function (...args) {
+    listener && listener.apply(dom, args)
+    dom.removeEventListener(type, handler)
+  }
+  dom.addEventListener(type, handler)
+}

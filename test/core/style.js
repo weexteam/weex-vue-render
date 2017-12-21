@@ -17,80 +17,47 @@
  * under the License.
  */
 import { init } from '../helper/runtime'
-import div from '../../src/components/div'
-import image from '../../src/components/image'
 import { init as initViewport } from '../../src/env/viewport'
-
-import scopedStyleBundle from '../data/build/dotvue/scoped-style'
-
-// function toArray (arr) {
-//   return Array.prototype.slice.call(arr)
-// }
-
-// function getVStyleSheetNodes () {
-//   const regVStyleSheets = /((?:,?\s*\.[\w-]+\[data-v-\w+\](?::\w+)?)+)\s*({[^}]+)/
-//   const nodes = toArray(document.styleSheets)
-//     .filter(function (styleSheet) {
-//       return regVStyleSheets.test(styleSheet.ownerNode.textContent)
-//     }).map(function (styleSheet) {
-//       return styleSheet.ownerNode
-//     })
-//   return nodes
-// }
 
 init('core style', (Vue, helper) => {
   const { scale } = initViewport()
+
+  let vm
+  const id = 'test-core-style'
+
   before(() => {
-    helper.register('div', div)
-    helper.register('image', image)
+    vm = helper.createVm(helper.bundles.core.style, id)
   })
 
-  it('should get normalized merged styles.', function (done) {
-    const vm = helper.createVm(scopedStyleBundle)
-    const el = vm.$refs.foo.$el || vm.$refs.foo
-    expect(el).to.be.ok
-    const expectedMap = {
-      width: 200 * scale + 'px',
-      height: 200 * scale + 'px',
-      backgroundColor: 'red'
-    }
-    const expectedDirection = {
-      WebkitBoxDirection: 'normal',
-      WebkitBoxOrient: 'horizontal',
-      WebkitFlexDirection: 'row',
-      flexDirection: 'row'
-    }
-    const expectedTransform = {
-      WebkitTransform: `translate3d(${100 * scale + 'px'}, ${100 * scale + 'px'}, 0px)`,
-      transform: `translate3d(${100 * scale + 'px'}, ${100 * scale + 'px'}, 0px)`
-    }
+  after(() => {
+    vm.$destroy()
+    vm = null
+    helper.clear(id)
+  })
 
-    for (const k in expectedMap) {
-      expect(el.style[k]).to.equal(expectedMap[k])
+  it('should get inline styles.', function () {
+    const ct = vm.$refs.ct
+    const txt = vm.$refs.txt
+    expect(ct).to.be.ok
+    const expectedCt = {
+      width: 750 * scale,
+      height: 400 * scale,
+      backgroundColor: 'rgb(247, 247, 247)'
     }
-    const directionRes = []
-    for (const k in expectedDirection) {
-      directionRes.push(el.style[k] === expectedDirection[k])
-    }
-    expect(directionRes).to.include(true)
+    const computedCtStyle = window.getComputedStyle(ct)
+    expect(parseFloat(computedCtStyle.width)).to.be.closeTo(expectedCt.width, 0.1)
+    expect(parseFloat(computedCtStyle.height)).to.be.closeTo(expectedCt.height, 0.1)
+    expect(computedCtStyle.backgroundColor).to.be.equal(expectedCt.backgroundColor)
 
-    const transformRes = []
-    for (const k in expectedTransform) {
-      transformRes.push(el.style[k] === expectedTransform[k])
+    expect(txt).to.be.ok
+    const expectedTxt = {
+      color: 'rgb(255, 0, 0)',
+      backgroundColor: 'rgb(0, 128, 0)',
+      lineHeight: 100 * scale
     }
-    expect(transformRes).to.include(true)
-
-    const id = 'test-style'
-    helper.registerDone(id, () => {
-      expect(el.style.backgroundImage).to.match(
-        /(?:-webkit-|-moz-|-ms-|-o-)?linear-gradient\(to top, (?:rgb\(245, 254, 253\)|#f5fefd), (?:rgb\(255, 255, 255\)|#ffffff)\)/)
-      expect(['-webkit-box',
-        '-moz-box',
-        '-ms-flexbox',
-        '-webkit-flex',
-        'flex']).to.include(el.style.display)
-      helper.unregisterDone(id)
-      done()
-    })
+    const computedTxtStyle = window.getComputedStyle(txt)
+    expect(computedTxtStyle.color).to.be.equal(expectedTxt.color)
+    expect(computedTxtStyle.backgroundColor).to.be.equal(expectedTxt.backgroundColor)
+    expect(parseFloat(computedTxtStyle.lineHeight)).to.be.closeTo(expectedTxt.lineHeight, 0.1)
   })
 })

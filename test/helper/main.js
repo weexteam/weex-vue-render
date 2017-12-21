@@ -23,16 +23,12 @@ const helper = {
    * @return {Vue} vue instance.
    */
   createVm (options = {}, id) {
-    let ct, root
+    let root
     const Vue = weex.__vue__
     if (id) {
-      ct = document.createElement('div')
-      ct.id = `${id}-root`
-      ct.style.cssText = 'width:100%;height:300px;overflow:scroll;'
       root = document.createElement('div')
-      root.id = id
-      ct.appendChild(root)
-      document.body.appendChild(ct)
+      root = root
+      document.body.appendChild(root)
     }
     const pre = this._vms[id]
     if (pre) {
@@ -47,8 +43,8 @@ const helper = {
   clearAll () {
     const roots = this.roots
     Object.keys(roots).forEach((id) => {
-      const ct = roots[id].parentNode
-      document.body.removeChild(ct)
+      const root = roots[id]
+      root.parentElement.removeChild(root)
     })
     this.roots = {}
   },
@@ -60,8 +56,8 @@ const helper = {
     const roots = this.roots
     const root = roots[id]
     if (!root) { return }
-    const el = roots[id]
-    el.parentElement.removeChild(el)
+    delete this.roots[id]
+    root.parentElement.removeChild(root)
   },
 
   registerDone (id, cb) {
@@ -85,6 +81,32 @@ const helper = {
    */
   compile (template) {
     return helper.createVm({ template })
+  },
+
+  _spy: {},
+
+  getSpy (spyName) {
+    return this._spy[spyName]
+  },
+
+  genSpys (spys) {
+    if (!window._spy) {
+      window._spy = {}
+    }
+    spys.forEach(name => {
+      this._spy[name] = sinon.spy()
+      window._spy[name] = (...args) => {
+        const spy = this._spy[name]
+        spy && spy(...args)
+      }
+    })
+  },
+
+  removeSpys (spys) {
+    spys.forEach(name => {
+      delete this._spy[name]
+      delete window._spy[name]
+    })
   }
 }
 

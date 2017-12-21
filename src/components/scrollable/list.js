@@ -20,8 +20,7 @@ import { scrollable, list as listMixin } from './mixins'
 
 function getList (weex) {
   const {
-    extractComponentStyle,
-    createEventMap
+    extractComponentStyle
   } = weex
 
   return {
@@ -63,12 +62,12 @@ function getList (weex) {
         ref: 'wrapper',
         attrs: { 'weex-type': 'list' },
         staticClass: this.wrapperClass,
-        on: createEventMap(this, {
+        on: {
           scroll: this.handleListScroll,
           touchstart: this.handleTouchStart,
           touchmove: this.handleTouchMove,
           touchend: this.handleTouchEnd
-        }),
+        },
         staticStyle: extractComponentStyle(this)
       }, this.createChildren(createElement))
     }

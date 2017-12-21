@@ -120,3 +120,14 @@ You should use the previous mentioned plugins in your vue-loader configuration.
 | **exclusive styles** | limit | none | wirte them in `<style>` tag for better performance. |
 |  | image attr: 'resize' | none | due to involving style changing, the 'resize' attribute shouldn't be a attribute binding like `:resize="someVar"`, instead you should use static attribute like `resize="cover"`. In other words, it shouldn't be updated. |
 | **ref** | what `this.$refs.xx` will get | always instance of VueComponent | HTMLElement for div, image and text; VueComponent for other components. |
+
+## Develop
+
+```shell
+// build for weex-vue-render package
+npm run build
+// debug and serve examples
+npm run dev
+// build and run test cases
+npm run test
+```

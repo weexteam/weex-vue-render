@@ -26,7 +26,7 @@ const _css = `
 `
 
 function getTextarea (weex) {
-  const { extractComponentStyle, createEventMap } = weex
+  const { extractComponentStyle } = weex
   const { inputCommon } = weex.mixins
   const { extend, mapFormEvents } = weex.utils
 
@@ -56,7 +56,7 @@ function getTextarea (weex) {
       // if (process.env.NODE_ENV === 'development') {
       //   validateStyles('textarea', this.$vnode.data && this.$vnode.data.staticStyle)
       // }
-      const events = extend(createEventMap(this), mapFormEvents(this))
+      const events = extend(mapFormEvents(this))
       return createElement('html:textarea', {
         attrs: {
           'weex-type': 'textarea',

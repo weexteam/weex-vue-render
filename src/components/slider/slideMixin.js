@@ -101,16 +101,12 @@ export default {
         {
           ref: 'wrapper',
           attrs: { 'weex-type': this.isNeighbor ? 'slider-neighbor' : 'slider' },
-          on: weex.createEventMap(
-            this,
-            ['scroll', 'scrollstart', 'scrollend'],
-            {
-              touchstart: this._handleTouchStart,
-              touchmove: weex.utils.throttle(weex.utils.bind(this._handleTouchMove, this), 25),
-              touchend: this._handleTouchEnd,
-              touchcancel: this._handleTouchCancel
-            }
-          ),
+          on: {
+            touchstart: this._handleTouchStart,
+            touchmove: weex.utils.throttle(weex.utils.bind(this._handleTouchMove, this), 25),
+            touchend: this._handleTouchEnd,
+            touchcancel: this._handleTouchCancel
+          },
           staticClass: 'weex-slider weex-slider-wrapper weex-ct',
           staticStyle: weex.extractComponentStyle(this)
         },
@@ -580,7 +576,7 @@ export default {
           this._nodesOffsetCleared = true
           this._clearNodesOffset()
         }
-        this._emitScrollEvent('scroll', {
+        this._emitScrollEvent('weex$scroll', {
           offsetXRatio: offsetX / this._wrapperWidth
         })
         inner.style.webkitTransform = `translate3d(${this.innerOffset + offsetX}px, 0, 0)`

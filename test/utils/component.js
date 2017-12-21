@@ -18,7 +18,6 @@
  */
 /*global Event*/
 import { init } from '../helper/runtime'
-// import div from '../../src/components/div'
 import * as components from '../../src/utils/component'
 
 init('utils component', (Vue, helper) => {

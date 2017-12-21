@@ -27,31 +27,23 @@ describe('utils', function () {
     const validImageTransparent = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
     const validImageBlack = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
     const invalidImage = isPhantom() ? 'data:image/gif;base64,' : 'http://invalid.img'
-    before(() => {
-      this.weexEmit = sinon.stub(window.weex, 'emit')
-    })
-    after(() => {
-      this.weexEmit.restore()
-    })
     it('fireLazyload', (done) => {
       const node = document.createElement('figure')
       const urlReg = /http(s)?:\/\/(\S+):(\d+)\//
-      node.setAttribute('img-src', invalidImage)
+      node.setAttribute('data-img-src', invalidImage)
       node.setAttribute('img-placeholder', validImageBlack)
       node.style.height = '10px'
       document.body.appendChild(node)
-      //  coverage branch if (item._src_loading)
-      node._src_loading = true
-      //  coverage branch if (Array.isArray(el))
       fireLazyload([node])
-      node._src_loading = false
-      fireLazyload(node)
-      setTimeout(() => {
-        expect(node.style.backgroundImage.replace(/"/g, '')
-          .replace(urlReg, '')).to.be.equal('url(' + validImageBlack + ')')
-        done()
-        document.body.removeChild(node)
-      }, 100)
+      node.addEventListener('load', () => {
+        debugger
+        setTimeout(() => {
+          expect(node.style.backgroundImage.replace(/"/g, '')
+            .replace(urlReg, '')).to.be.equal('url(' + validImageBlack + ')')
+          document.body.removeChild(node)
+          done()
+        }, 16)
+      })
     })
     describe('getThrottleLazyload', () => {
       it('should use default value while params is undefined', (done) => {
@@ -66,7 +58,7 @@ describe('utils', function () {
         const urlReg = /http(s)?:\/\/(\S+):(\d+)\//
         const wait = 100
         node.style.height = '10px'
-        node.setAttribute('img-src', validImageTransparent)
+        node.setAttribute('data-img-src', validImageTransparent)
         node.setAttribute('img-placeholder', validImageBlack)
         document.body.appendChild(node)
         window._first_screen_detected = false

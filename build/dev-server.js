@@ -27,7 +27,6 @@ const webEntries = getWebEntries()
 Object.keys(webEntries).forEach(function (name) {
   webEntries[name] = [config.dev.clientPath].concat(webEntries[name])
 })
-console.log(webEntries)
 const compiler = webpack(merge(webWebpackConfig, {
 	entry: webEntries
 }))

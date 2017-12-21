@@ -25,12 +25,12 @@
     "build:plugins": "node build/build.js plugins",
     "build:examples": "node build/build-examples",
     "build:test": "node build/build-examples --test",
-    "test": "karma start build/karma.config.js",
-    "ci": "npm run build:examples && npm run test",
+    "test": "npm run build:test && karma start build/karma.config.js",
+    "ci": "npm run test",
     "serve": "serve -p 12580"
   },
   "devDependencies": {
-    "autoprefixer": "^7.2.2",
+    "autoprefixer": "^7.2.3",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.3",
     "babel-loader": "^7.1.1",

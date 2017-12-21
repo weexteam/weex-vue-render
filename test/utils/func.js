@@ -19,9 +19,7 @@
 const utils = require('../../src/utils/func')
 // import * as utils from '../../src/utils/func'
 describe('utils', function () {
-  debugger;
   describe('function', function () {
-    debugger;
     before(() => {
       this.clock = sinon.useFakeTimers()
     })

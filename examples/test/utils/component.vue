@@ -7,7 +7,7 @@
 <script>
   module.exports = {
     components: {
-      foo: require('./appear-foo.vue')
+      foo: require('./component-foo.vue')
     },
     methods: {
       appear: function (evt) {

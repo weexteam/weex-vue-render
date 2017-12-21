@@ -74,3 +74,4 @@ examples/bundle-entry
 # dist
 packages/
 public/
+test/bundles/

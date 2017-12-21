@@ -48,25 +48,24 @@ for (let i = 0, l = plugins.length; i < l; i++) {
 rollupConfig.format = 'iife'
 rollupConfig.name = 'test'
 rollupConfig.sourcemap = 'inline'
-rollupConfig.intro = `
-describe('ignore inject function from postcss', function () {
-  it('ignore', function () {
-      var shouldBe = 'test'
-      var expected = __$styleInject('.body{}',shouldBe)
-      expect(shouldBe).to.be.equal(expected)
-    })
-  })
-`
+// rollupConfig.intro = `
+// describe('ignore inject function from postcss', function () {
+//   it('ignore', function () {
+//       var shouldBe = 'test'
+//       var expected = __$styleInject('.body{}',shouldBe)
+//       expect(shouldBe).to.be.equal(expected)
+//     })
+//   })
+// `
 
 module.exports = function (config) {
   config.set({
     frameworks: ['mocha', 'sinon-chai'],
     browsers: ['PhantomJS'],
     files: [
-      resolve('test/utils/component.js'),
-      // resolve('test/utils/func.js'),
-      // resolve('test/utils/type.js')
-      // '../test/utils/*.js',
+      resolve('test/core/style.js'),
+      resolve('test/components/input.js'),
+      '../test/utils/*.js'
       // '../test/core/*.js',
       // '../test/!(utils|core)/*.js'
       // '../test/components/switch.js',

@@ -23,18 +23,6 @@ import {
 } from '../../src/utils/perf'
 describe('utils', function () {
   describe('pref', function () {
-    // before(() => {
-    //   this.clock = sinon.useFakeTimers()
-    // })
-    // after(() => {
-    //   this.clock.restore()
-    // })
-    beforeEach(() => {
-      this.weexEmit = sinon.stub(window.weex, 'emit')
-    })
-    afterEach(() => {
-      this.weexEmit.restore()
-    })
     it('tagBegin', () => {
       const name = 'test'
       tagBegin(name)

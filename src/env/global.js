@@ -28,7 +28,7 @@ weex._styleMap = {}
 
 ; ['getComponentInlineStyle',
   'extractComponentStyle',
-  'createEventMap',
+  // 'createEventMap',
   'trimTextVNodes']
   .forEach(function (method) {
     weex[method] = core[method].bind(weex)

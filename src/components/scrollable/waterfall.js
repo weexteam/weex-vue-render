@@ -29,8 +29,7 @@ const DEFAULT_COLUMN_COUNT = 1
 
 function getWaterfall (weex) {
   const {
-    extractComponentStyle,
-    createEventMap
+    extractComponentStyle
   } = weex
 
   return {
@@ -361,12 +360,12 @@ function getWaterfall (weex) {
       return createElement('main', {
         ref: 'wrapper',
         attrs: { 'weex-type': 'waterfall' },
-        on: createEventMap(this, {
+        on: {
           scroll: this.handleScroll,
           touchstart: this.handleTouchStart,
           touchmove: this.handleTouchMove,
           touchend: this.handleTouchEnd
-        }),
+        },
         staticClass: 'weex-waterfall weex-waterfall-wrapper weex-ct',
         staticStyle: mergedStyle
       }, this._createChildren(createElement, mergedStyle))

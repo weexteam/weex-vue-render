@@ -71,6 +71,8 @@ function getAllStyles () {
   }, {}))
 }
 
+const allStyles = getAllStyles()
+
 export default {
   scrollableTypes: ['scroller', 'list', 'waterfall'],
   gestureEvents: [
@@ -81,5 +83,5 @@ export default {
     'longpress',
     'tap'
   ],
-  bindingStyleNamesForPx2Rem: getAllStyles()
+  bindingStyleNamesForPx2Rem: allStyles
 }

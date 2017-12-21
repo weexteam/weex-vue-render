@@ -2,6 +2,7 @@ process.env.NODE_ENV = 'production'
 
 const path = require('path')
 const ora = require('ora')
+const fs = require('fs-extra')
 const chalk = require('chalk')
 const del = require('del')
 const webpack = require('webpack')
@@ -25,6 +26,32 @@ if (argv === '--test') {
 let webConfig = merge(webpackConfigs[0], {
   entry: isTest ? getTestEntries() : getWebEntries()
 })
+
+function generateTestMeta (entries, file) {
+  // to generate test/bundles.js
+  const dir = {}
+  for (const key in entries) {
+    const arr = key.split('/')
+    let next = dir
+    for (let i = 0, l = arr.length; i < l; i++) {
+      const nextKey = arr[i]
+      if (i === l - 1) {
+        next[nextKey] = `require('./${key}')`
+      }
+      else {
+        const n = next[nextKey]
+        next = n || (next[nextKey] = {})
+      }
+    }
+  }
+  const content = `module.exports = ${
+    JSON.stringify(dir, null, 2).replace(/"(require\([^)]+\))"/g, function ($0, $1) {
+      return $1
+    })
+  }\n`
+  fs.outputFileSync(file, content)
+}
+
 if (isTest) {
   // remove uglify plugin.
   webConfig.plugins.pop()
@@ -38,6 +65,8 @@ if (isTest) {
     devtool: false
   })
   del.sync(resolve('test/bundles'))
+  // generate test/bundles.js
+  generateTestMeta(webConfig.entry, resolve('test/bundles/index.js'))
 }
 
 const finalConfig = isTest

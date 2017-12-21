@@ -90,7 +90,7 @@ export function hasIntersection (rect, ctRect, dir, offset) {
   if (isVertical && !horizontalBalance(rect, ctRect)) {
     return [false, false]
   }
-  offset = parseInt(offset || 0) * weex.config.env.scale
+  offset = offset ? parseInt(offset) * weex.config.env.scale : 0
   switch (dir) {
     case 'up':
       return [
@@ -172,11 +172,14 @@ function updateWatchAppearList (container) {
 /**
  * inject removeChild function to watch disappear and offsetDisappear events.
  */
-const nativeRemove = HTMLElement.prototype.removeChild
-HTMLElement.prototype.removeChild = function (el) {
-  el._visible && triggerEvent(el, 'disappear', null)
-  el._offsetVisible && triggerEvent(el, 'offsetDisappear', null)
-  nativeRemove.apply(this, arguments)
+if (!window._rmInjected) {
+  window._rmInjected = true
+  const nativeRemove = HTMLElement.prototype.removeChild
+  HTMLElement.prototype.removeChild = function (el) {
+    el._visible && triggerEvent(el, 'disappear', null)
+    el._offsetVisible && triggerEvent(el, 'offsetDisappear', null)
+    nativeRemove.apply(this, arguments)
+  }
 }
 
 /**

@@ -17,7 +17,6 @@
  * under the License.
  */
 
-import { getViewportInfo } from '../env/viewport'
 import config from '../config'
 import { camelize } from './func'
 const { bindingStyleNamesForPx2Rem } = config
@@ -45,13 +44,6 @@ export function supportHairlines () {
   return _supportHairlines
 }
 
-/**
- * remove comments from a cssText.
- */
-export function trimComment (cssText) {
-  return cssText.replace(/(?:\/\*)[\s\S]*?\*\//g, '')
-}
-
 let support = null
 
 export function supportSticky () {
@@ -64,124 +56,6 @@ export function supportSticky () {
   support = elementStyle.position.indexOf('sticky') !== -1
   return support
 }
-
-const regPercentage = /^[+-]?\d+(\.\d+)?%$/
-export function isPercentage (val) {
-  return regPercentage.test(val)
-}
-
-const regUnitsNum = /^([+-]?\d+(?:\.\d+)?)([p,w]x)?$/ // support units: px, wx.
-export function normalizeUnitsNum (val) {
-  const match = val.match(regUnitsNum)
-  if (!match) { return '' }
-  let unit = 'px' // px by default.
-  if (match[2]) {
-    unit = match[2]
-  }
-  return parseScale(parseFloat(match[1]), unit)
-}
-
-function getUnitScaleMap () {
-  const { scale, dpr } = getViewportInfo()
-  return {
-    px: scale,
-    wx: scale * dpr
-  }
-}
-
-function limitScale (val, limit) {
-  limit = limit || 1
-  const sign = val === 0 ? 0 : val > 0 ? 1 : -1
-  let newVal = Math.abs(val) > limit ? val : sign * limit
-  // support 1px device width.
-  if (newVal === 1 && val < 1 && supportHairlines()) {
-    newVal = 0.5
-  }
-  return newVal
-}
-
-function parseScale (val, unit) {
-  const unitScaleMap = getUnitScaleMap()
-  return limitScale(val * unitScaleMap[unit]) + 'px'
-}
-
-export function normalizeString (styleKey, styleVal) {
-  if (isPercentage(styleVal)) {
-    return styleVal
-  }
-
-  /**
-   * 1. test if is a regular scale css. e.g. `width: 100px;`
-   *  this should be a standalone number value with or without unit, otherwise
-   *  it shouldn't be changed.
-   */
-  const unitsNum = normalizeUnitsNum(styleVal)
-  if (unitsNum) { return unitsNum }
-
-  /**
-   * 2. if a string contains multiple px values, than they should be all normalized.
-   *  values should have wx or px units, otherwise they should be left unchanged.
-   *  e.g.
-   *    transform: translate(10px, 6px, 0)
-   *    border: 2px solid red
-   */
-  const numReg = /([+-]?[\d.]+)([p,w]x)/ig
-  if (numReg.test(styleVal)) {
-    const unitScaleMap = getUnitScaleMap()
-    const val = styleVal.replace(numReg, function (m, $0, $1) {
-      const res = parseFloat($0) * unitScaleMap[$1]
-      return limitScale(res) + 'px'
-    })
-    return val
-  }
-
-  // otherwise
-  return styleVal
-}
-
-// export function autoPrefix (style) {
-//   const prefixed = addPrefix(style)
-//   // flex only added WebkitFlex. Should add WebkitBoxFlex also.
-//   const flex = prefixed.flex
-//   if (flex) {
-//     prefixed.WebkitBoxFlex = flex
-//     prefixed.MozBoxFlex = flex
-//     prefixed.MsFlex = flex
-//   }
-//   return prefixed
-// }
-
-export function normalizeNumber (styleKey, styleVal) {
-  const { scale } = getViewportInfo()
-  return styleVal * scale + 'px'
-}
-
-/**
- * normalize style to adapte to current viewport by multiply current scale.
- * @param  {object} style: should be camelCase.
- */
-// export function normalizeStyle (style) {
-//   const res = {}
-//   for (const key in style) {
-//     const val = style[key]
-//     if (noUnitsNumberKeys.indexOf(key) > -1) {
-//       res[key] = val
-//       continue
-//     }
-//     switch (typeof val) {
-//       case 'string':
-//         res[key] = normalizeString(key, val)
-//         break
-//       case 'number':
-//         res[key] = normalizeNumber(key, val)
-//         break
-//       default:
-//         res[key] = val
-//         break
-//     }
-//   }
-//   return res
-// }
 
 /**
  * get transformObj
@@ -367,7 +241,9 @@ export function px2rem (px, rootValue) {
     }
     else {  // 'px' -> rem
       const pxVal = parseFloat($1)
-      const sign = Math.sign(pxVal)
+      const sign = pxVal > 0
+        ? 1 : pxVal < 0 ?
+          -1 : 0
       if (Math.abs(pxVal) <= 1) {
         return supportHairlines()
           ? `${sign * 0.5}px`

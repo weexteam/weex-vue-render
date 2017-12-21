@@ -138,7 +138,6 @@ export function mapFormEvents (context) {
       if (context.$el) {
         event.value = context.$el.value
       }
-      context.$emit(type, event)
     }
   })
   return eventMap
