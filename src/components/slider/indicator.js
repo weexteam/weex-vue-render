@@ -73,7 +73,16 @@ function _render (context, h) {
   return h('nav', {
     attrs: { 'weex-type': 'indicator' },
     staticClass: 'weex-indicator weex-ct'
-  }, children)
+  }, [
+    // the indicator nav may cover the slides, and may stop the
+    // click event be triggered on the slides.
+    // so a smaller wrapper is needed to prevent the overlap.
+    // This wrapper will cover only the whole size of all the
+    // indicator pointers' item-sizes.
+    h('div', {
+      staticClass: 'weex-indicator-inner'
+    }, children)
+  ])
 }
 
 const indicator = {

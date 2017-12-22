@@ -73,7 +73,13 @@ const configs = {
       banner:`\nconsole.log('START WEEX VUE RENDER: ${version}, Build ${now()}.');\n\n`
     },
     plugins: [
-      postcss(),
+      postcss({
+        plugins: [
+          require('autoprefixer')({
+            browsers: ['> 0.1%', 'ios >= 8', 'not ie < 12']
+          })
+        ]
+      }),
       nodeResolve({
         jsnext: true,
         main: true,

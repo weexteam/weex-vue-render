@@ -1,6 +1,8 @@
 <template>
-  <list class="list" @loadmore="loadmore" loadmoreoffset=2000>
-    <cell class="cell" v-for="item in shopList" :scope="item.scopeValue" @click="oncellclick(item.id)">
+  <list class="list" @loadmore="loadmore" :loadmoreoffset="0">
+    <text class="btn" @click="loadmore">ADD {{groupCount}} CELLS</text>
+    <text class="btn clear" @click="clear">CLEAR ALL</text>
+    <div class="cell" v-for="item in shopList" :id="`item-${item.id}`" :key="item.id" :scope="item.scopeValue" @click="oncellclick(item.id)">
       <div class="shop-div">
         <div class="shop-header">
           <div class="shop-header-icon">
@@ -132,106 +134,22 @@
           </div>
         </div>
       </div>
-    </cell>
+    </div>
   </list>
 </template>
-
-<style scoped>
-  .flexRow {
-    flex-direction: row;
-  }
-
-  .flexColumn {
-    flex-direction: column;
-  }
-
-  .text {
-  }
-
-  .div {
-  }
-
-  .fixed {
-    position: fixed;
-    bottom: 50px;
-    left: 50px;
-    width: 300px;
-    height: 50px;
-    align-items: center;
-    justify-content: center
-  }
-
-  .shopImg {
-    width: 220px;
-    height: 220px;
-  }
-
-  .list {
-    flex-direction: column;
-    overflow: hidden;
-    width: 750px;
-    height: 1200px;
-    background-color: #dddddd;
-  }
-
-  .cell {
-    background-color: #dddddd;
-    flex-direction: column;
-    width: 750px;
-  }
-
-  .test {
-    width:60px;
-    height:60px;
-  }
-
-  .shop-div {
-    flex-direction: column;
-    background-color: #ffffff;
-    margin: 5px;
-    padding: 10px;
-    border-width: 1px;
-    border-color: #cccccc;
-    overflow: visible;
-  }
-
-  .shopRowList {
-    flex-direction: column;
-    border-width: 1px;
-    border-color: #cccccc;
-    overflow: visible;
-    margin: 5px;
-    padding: 10px;
-    background-color: #ffffff;
-  }
-
-  .shop-header {
-    flex-direction: row;
-    width: 720px;
-  }
-  
-  .shop-header-icon {
-    flex: 2;
-    flex-direction: row;
-  }
-
-  .shop-footer {
-    flex-direction: row;
-    width: 720px;
-  }
-
-  .small-img {
-    width: 20px;
-    height: 20px;
-  }
-</style>
 
 <script>
   var modal = weex.requireModule('modal')
   module.exports = {
     data: function () {
       return {
-        shopList: [
+        groupCount: 20,
+        loadmoreCount: 0,
+        shopList: [],
+        group: [],
+        timestamp: 0,
+        loadmoreTimestamp: 0,
+        items: [
           {
             id: 1,
             scopeValue: 1,
@@ -531,16 +449,63 @@
             shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
             shareText: "10",
           }
-          ],
+        ]
       }
     },
+    created () {
+      let arr = this.items.slice()
+      let len = this.groupCount / 10
+      while (--len) {
+        arr = arr.concat(arr)
+      }
+      // each group has count * 10 cells.
+      // each cell has 104 nodes.
+      // each cell has 3 shop items.
+      this.group = arr
+    },
+    updated () {
+      const begin = this.timestamp
+      const end = +new Date()
+      const len = this.shopList.length
+      if (len === 0) {
+        return
+      }
+      modal.toast({
+        'message': `updated in ${end-begin}ms. total: ${len} cells.`,
+        'duration': 2.0
+      });
+    },
     methods: {
-      loadmore: function(e) {
-        modal.toast({
-          'message': 'loadmore',
-          'duration': 2.0
-        });
+      getNextGroup (loadmoreCount) {
+        const len = this.groupCount
+        const base = loadmoreCount * len
+        const arr = this.group.slice()
+        for (let i = 0; i < len; i++) {
+          arr[i].id = base + i + 1
+        }
+        return arr
       },
+
+      loadmore: function(e) {
+        const now = +new Date()
+        this.timestamp = now
+        if (now - this.loadmoreTimestamp < 100) {
+          return
+        }
+        this.loadmoreTimestamp = now
+        const loadmoreCount = this.loadmoreCount
+        modal.toast({
+          'message': `loadmore ${loadmoreCount + 1}.`
+        })
+        this.shopList = this.shopList.concat(this.getNextGroup(loadmoreCount))
+        this.loadmoreCount++
+      },
+
+      clear () {
+        this.shopList = []
+        this.loadmoreCount = 0
+      },
+
       oncellclick: function(id) {
         modal.toast({
           'message': 'row ' + id + ' clicked',
@@ -551,3 +516,108 @@
 
   }
 </script>
+
+<style scoped>
+  .flexRow {
+    flex-direction: row;
+  }
+
+  .flexColumn {
+    flex-direction: column;
+  }
+  
+  .btn {
+    position: fixed;
+    z-index: 999;
+    width: 370px;
+    height: 300px;
+    text-align: center;
+    justify-content: center;
+    top: 30px;
+    right: 30px;
+    font-size: 32px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: #666;
+    background-color: #f7f7f7;
+  }
+
+  .btn.clear {
+    top: 340px;
+  }
+
+  .fixed {
+    position: fixed;
+    bottom: 50px;
+    left: 50px;
+    width: 300px;
+    height: 50px;
+    align-items: center;
+    justify-content: center
+  }
+
+  .shopImg {
+    width: 220px;
+    height: 220px;
+  }
+
+  .list {
+    flex-direction: column;
+    overflow: hidden;
+    width: 750px;
+    height: 1200px;
+    background-color: #dddddd;
+  }
+
+  .cell {
+    background-color: #dddddd;
+    flex-direction: column;
+    width: 750px;
+  }
+
+  .test {
+    width:60px;
+    height:60px;
+  }
+
+  .shop-div {
+    flex-direction: column;
+    background-color: #ffffff;
+    margin: 5px;
+    padding: 10px;
+    border-width: 1px;
+    border-color: #cccccc;
+    overflow: visible;
+  }
+
+  .shopRowList {
+    flex-direction: column;
+    border-width: 1px;
+    border-color: #cccccc;
+    overflow: visible;
+    margin: 5px;
+    padding: 10px;
+    background-color: #ffffff;
+  }
+
+  .shop-header {
+    flex-direction: row;
+    width: 720px;
+  }
+  
+  .shop-header-icon {
+    flex: 2;
+    flex-direction: row;
+  }
+
+  .shop-footer {
+    flex-direction: row;
+    width: 720px;
+  }
+
+  .small-img {
+    width: 20px;
+    height: 20px;
+  }
+</style>
+

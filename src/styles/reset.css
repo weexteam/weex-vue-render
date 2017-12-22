@@ -42,9 +42,6 @@
 .weex-root *::before,
 .weex-root *::after {
   box-sizing: border-box;
-  -webkit-text-size-adjust: none;
-  -moz-text-size-adjust: none;
-  -ms-text-size-adjust: none;
   text-size-adjust: none;
 }
 
@@ -55,7 +52,6 @@
 .weex-root label,
 .weex-root select,
 .weex-root textarea {
-  -ms-touch-action: manipulation;
       touch-action: manipulation;
 }
 
