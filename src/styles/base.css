@@ -91,7 +91,7 @@ div.weex-root {
   overflow: hidden; /* it'll be clipped if the height is not high enough. */
 }
 
-.weex-img {
+.weex-image {
   background-repeat: no-repeat;
   background-position: 50% 50%;
 }

@@ -18,7 +18,7 @@
  */
 /* global Event */
 
-import { init } from '../helper/runtime'
+import { init } from '../helper'
 import div from '../../src/components/div'
 import eventBubbleBundle from '../data/build/dotvue/event-bubble.js'
 

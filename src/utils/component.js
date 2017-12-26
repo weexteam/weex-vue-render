@@ -192,6 +192,9 @@ export function watchAppear (context, fireNow) {
 
   let isWindow = false
   const container = getParentScrollerElement(context)
+  if (!container) {
+    return
+  }
   if (container === document.body) {
     isWindow = true
   }

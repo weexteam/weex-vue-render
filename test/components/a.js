@@ -18,7 +18,6 @@
  */
 import { init } from '../helper'
 import a from '../../src/components/a'
-import div from '../../src/components/div'
 
 init('<a> component', (Vue, helper) => {
   const { compile, utils } = helper

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { init } from '../helper/runtime'
+import { init } from '../helper'
 import { init as initViewport } from '../../src/env/viewport'
 
 init('core style', (Vue, helper) => {

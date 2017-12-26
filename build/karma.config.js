@@ -65,6 +65,8 @@ module.exports = function (config) {
     files: [
       resolve('test/core/style.js'),
       resolve('test/components/input.js'),
+      resolve('test/components/div.js'),
+      // resolve('test/components/a.js'),
       '../test/utils/*.js'
       // '../test/core/*.js',
       // '../test/!(utils|core)/*.js'

@@ -17,7 +17,7 @@
  * under the License.
  */
 /*global Event*/
-import { init } from '../helper/runtime'
+import { init } from '../helper'
 import * as components from '../../src/utils/component'
 
 init('utils component', (Vue, helper) => {

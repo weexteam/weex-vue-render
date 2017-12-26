@@ -19,13 +19,13 @@
 import './env'
 
 /* istanbul ignore next */
-import Vue from 'vue/dist/vue.runtime.esm.js'
+import Vue from 'vue/dist/vue.esm.js'
 // import { base, scrollable, style, inputCommon } from '../../../render/vue/mixins'
 import { base, style } from '../../src/mixins'
 import weex from '../../src/env/weex'
 import { setVue } from '../../src/env'
-import helper from './main'
-import { doneMixin } from './mixin'
+
+import * as utils from './utils'
 
 /**
  * Describe tests for current versions of Vue.
@@ -39,16 +39,58 @@ export function init (title, fn) {
       Vue.config.isReservedTag = tag => htmlRegex.test(tag)
       Vue.config.parsePlatformTagName = tag => tag.replace(htmlRegex, '')
 
+      function isWeexTag (tag) {
+        return !!weex._components[tag]
+      }
+      const oldGetTagNamespace = Vue.config.getTagNamespace
+      Vue.config.getTagNamespace = function (tag) {
+        if (isWeexTag(tag)) {
+          return
+        }
+        return oldGetTagNamespace(tag)
+      }
+
       Vue.mixin(base)
       Vue.mixin(style)
-
-      // for test only mixins.
-      Vue.mixin(doneMixin)
 
       window.global = window
       global.weex = weex
       setVue(Vue)
+
+      window._no_remove_style_sheets = true
     })
+
+    const helper = {
+
+      utils,
+      /**
+       * register a component.
+       * @param  {string} name,
+       * @param  {object} component.
+       */
+      register (name, component) {
+        global.weex.install(component)
+      },
+
+      /**
+       * create a vm instance of Vue.
+       * @param  {Object} options.
+       * @return {Vue} vue instance.
+       */
+      createVm (options = {}) {
+        // options.components = components
+        return new Vue(options).$mount()
+      },
+
+      /**
+       * [compile description]
+       * @param  {[type]} template [description]
+       * @return {[type]}          [description]
+       */
+      compile (template) {
+        return helper.createVm({ template })
+      }
+    }
 
     /**
      * describe a vue-render test for certain vue verson.

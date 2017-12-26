@@ -52,7 +52,7 @@ exports.getWebEntries = function (noEntry) {
   const entries = getEntries(false, noEntry)
   // for test.
   // const entryDir = 'web'
-  // const entryName = 'components/text'
+  // const entryName = 'hello'
   // const entryPath = path.join(entryDir, entryName)
   // fs.outputFileSync(
   //   resolve(path.join('examples/bundle-entry', entryPath + '.js')),
