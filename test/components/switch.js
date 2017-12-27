@@ -23,7 +23,7 @@ init('<switch> component', (Vue, helper) => {
   const { utils, compile } = helper
 
   before(() => {
-    helper.register('switch', _switch)
+    helper.install(switch)
   })
 
   it('simple <switch> component', () => {

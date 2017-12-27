@@ -22,13 +22,11 @@ import web from '../../src/components/web'
 init('<web> component', (Vue, helper) => {
   const { utils, compile } = helper
   before(() => {
-    helper.register('web', web)
+    helper.install(web)
   })
 
   it('simple <web> component', () => {
     const vm = compile(`<web></web>`)
-
-    // console.log(vm.$el)
     expect(vm.$el.tagName.toLowerCase()).to.be.equal('iframe')
     expect(utils.toArray(vm.$el.classList)).to.include.members(['weex-web', 'weex-el'])
   })

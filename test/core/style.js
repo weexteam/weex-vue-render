@@ -23,15 +23,13 @@ init('core style', (Vue, helper) => {
   const { scale } = initViewport()
 
   let vm
-  const id = 'test-core-style'
+  const id = 'core.style'
 
   before(() => {
-    vm = helper.createVm(helper.bundles.core.style, id)
+    vm = helper.createVm(id)
   })
 
   after(() => {
-    vm.$destroy()
-    vm = null
     helper.clear(id)
   })
 

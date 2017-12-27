@@ -24,8 +24,8 @@ init('<list> component', (Vue, helper) => {
   const { utils, compile } = helper
 
   before(() => {
-    helper.register('list', list)
-    helper.register('cell', cell)
+    helper.install(list)
+    helper.install(cell)
   })
 
   it('create simple list component', () => {

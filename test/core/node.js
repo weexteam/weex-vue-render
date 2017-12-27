@@ -27,7 +27,7 @@ init('core node', (Vue, helper) => {
   let vm = null
   let el = null
   before(() => {
-    helper.register('div', div)
+    helper.install(div)
     vm = helper.createVm(eventBubbleBundle, id)
     el = vm.$el.querySelector('.event-bubble-outter')
   })

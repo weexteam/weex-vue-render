@@ -2,111 +2,133 @@ import weex from '../../src/env/weex'
 import * as utils from './utils'
 import bundles from '../bundles'
 
+function getIdPrefix (id) {
+  return id.split('.').join('_') + '_'
+}
+
 const helper = {
-  roots: {},
-  _done: {},
-  _vms: {},
+  data: {}, // vm, spy, done, root
   bundles,
   utils,
   /**
-   * register a component.
-   * @param  {string} name,
-   * @param  {object} component.
+   * install a weex plugin.
+   * @param  {object} plguin.
    */
-  register (name, component) {
-    weex.install(component)
+  install (plugin) {
+    weex.install(plugin)
   },
 
   /**
-   * create a vm instance of Vue.
-   * @param  {Object} options.
+   * create a vm instance of Vue. and generate spys for the istance.
+   * @param {String} id Also the bundle path. e.g. 'components.div'
+   *    means the test bundle is avaiable in path
+   *    'helper.bundles.components.div'.
+   * @param {Object} options
+   *  - spys: a array of spy function names.
    * @return {Vue} vue instance.
    */
-  createVm (options = {}, id) {
-    let root
-    const Vue = weex.__vue__
-    if (id) {
-      root = document.createElement('div')
-      root = root
-      document.body.appendChild(root)
+  createVm (id, options = {}) {
+    if (!id) {
+      return
     }
-    const pre = this._vms[id]
-    if (pre) {
+    const data = this.data[id]
+    if (data) {
       helper.clear(id)
     }
-    const vm = new Vue(options).$mount(root)
-    this._vms[id] = vm
-    this.roots[id] = vm.$el
+    const ct = document.createElement('div')
+    document.body.appendChild(ct)
+    const Vue = weex.__vue__
+    const bundle = id.split('.').reduce((pre, key) => {
+      if (!pre) {
+        throw new Error(`Test bundle is missing: ${id}`)
+      }
+      return pre[key]
+    }, this.bundles)
+    const vm = new Vue(bundle).$mount(ct)
+    const root = vm.$el
+    root.id = id
+    root.style.height = '100%'
+
+    this.data[id] = {
+      vm,
+      root,
+      spy: {},
+      done: {},
+    }
+
+    const { spys } = options
+    // gen spys
+    if (spys) {
+      this.genSpys(id, spys)
+    }
     return vm
   },
 
   clearAll () {
-    const roots = this.roots
-    Object.keys(roots).forEach((id) => {
-      const root = roots[id]
-      root.parentElement.removeChild(root)
-    })
-    this.roots = {}
+    const data = this.data
+    for (var id in data) {
+      this.clear(id)
+    }
   },
 
   clear (id) {
     if (!id) {
       return this.clearAll()
     }
-    const roots = this.roots
-    const root = roots[id]
-    if (!root) { return }
-    delete this.roots[id]
+    const data = this.data[id]
+    const { vm, root } = data
+    vm && vm.$destroy()
     root.parentElement.removeChild(root)
+    delete this.data[id]
   },
 
-  registerDone (id, cb) {
-    this._done[id] = cb
-  },
-
-  unregisterDone (id) {
-    if (!id) { return }
-    delete this._done[id]
-  },
-
-  done (id, ...args) {
-    const done = this._done[id]
-    done && done(...args)
-  },
-
-  /**
-   * [compile description]
-   * @param  {[type]} template [description]
-   * @return {[type]}          [description]
-   */
-  compile (template) {
-    return helper.createVm({ template })
-  },
-
-  _spy: {},
-
-  getSpy (spyName) {
-    return this._spy[spyName]
-  },
-
-  genSpys (spys) {
-    if (!window._spy) {
-      window._spy = {}
+  registerDone (id, subId, cb) {
+    if (typeof subId === 'function') {
+      subId = 'default'
+      cb = subId
     }
+    const data = this.data[id]
+    if (!data.done) {
+      data.done = {}
+    }
+    data.done[subId] = () => {
+      cb(done => {
+        done()
+        delete data.done[subId]
+      })
+    }
+  },
+
+  genSpys (id, spys) {
+    const data = this.data[id]
     spys.forEach(name => {
-      this._spy[name] = sinon.spy()
-      window._spy[name] = (...args) => {
-        const spy = this._spy[name]
-        spy && spy(...args)
-      }
+      data.spy[name] = sinon.spy()
     })
   },
 
-  removeSpys (spys) {
-    spys.forEach(name => {
-      delete this._spy[name]
-      delete window._spy[name]
-    })
+  callSpy (id, spyName, ...args) {
+    return this.data[id].spy[spyName](...args)
+  },
+
+  getSpys (id) {
+    return this.data[id].spy
+  },
+
+  getSpy (id, spyName) {
+    return this.data[id].spy[spyName]
+  },
+
+  // mock mobile click events:
+  // weex$tap first, and click in 200 ms later.
+  click (el, cb) {
+    const tap = new Event('weex$tap', { bubbles: true, cancellable: true })
+    el.dispatchEvent(tap)
+    setTimeout(function () {
+      el.click()
+      setTimeout(function () {
+        cb && cb()
+      }, 25)
+    }, 200)
   }
 }
 

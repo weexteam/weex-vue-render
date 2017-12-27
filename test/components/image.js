@@ -20,10 +20,10 @@ import { init } from '../helper'
 import image from '../../src/components/image'
 
 init('<image> component', (Vue, helper) => {
-  const { compile, utils } = helper
+  const { utils } = helper
 
   before(() => {
-    helper.register('image', image)
+    helper.install(image)
   })
 
   it('simple <image> component', () => {

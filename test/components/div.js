@@ -20,12 +20,16 @@ import { init } from '../helper'
 
 init('<div> component', (Vue, helper) => {
   const { utils } = helper
-  const id = "test-components-div"
+  const id = "components.div"
   let vm, refs
 
   before(() => {
-    vm = helper.createVm(helper.bundles.components.div, id)
+    vm = helper.createVm(id)
     refs = vm.$refs
+  })
+
+  after(() => {
+    helper.clear(id)
   })
 
   it('simple <div> component', () => {
@@ -39,7 +43,6 @@ init('<div> component', (Vue, helper) => {
 
   it('<div> with children <div>', () => {
     const el = refs.withChildren
-    debugger
     expect(el.children.length).to.be.equal(1)
     expect(el.children[0].tagName).to.match(/^(?:html:)?div$/i)
     expect(el.children[0].getAttribute('weex-type')).to.be.equal('div')

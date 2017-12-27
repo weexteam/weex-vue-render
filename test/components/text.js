@@ -24,7 +24,7 @@ init('<text> component', (Vue, helper) => {
   const { utils, compile } = helper
 
   before(() => {
-    helper.register('text', text)
+    helper.install(text)
   })
 
   it('create simple text component', () => {

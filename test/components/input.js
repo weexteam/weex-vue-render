@@ -20,19 +20,18 @@ import { init } from '../helper'
 
 init('components input', (Vue, helper) => {
 
-  let vm
-  const id = 'test-components-input'
-  let refs = {}
+  const id = 'components.input'
+  const spys = ['input', 'change']
+  let vm, refs
 
   before(() => {
-    vm = helper.createVm(helper.bundles.components.input, id)
+    vm = helper.createVm(id, {
+      spys
+    })
     refs = vm.$refs
-    helper.genSpys(['input', 'change'])
   })
 
   after(() => {
-    vm.$destroy()
-    vm = null
     helper.clear(id)
   })
 
@@ -48,10 +47,6 @@ init('components input', (Vue, helper) => {
       const input = refs.inputText
       helper.utils.once(input, 'input', function (e) {
         expect(e.target.value).to.be.equal('abc')
-        // setTimeout(function () {
-        //   expect(refs.txtInput.textContent).to.be.equal('abc')
-        //   done()
-        // }, 25)
         done()
       })
       expect(input.value).to.equal('')
@@ -63,14 +58,8 @@ init('components input', (Vue, helper) => {
       const input = refs.inputText
       helper.utils.once(input, 'change', function (e) {
         expect(e.target.value).to.be.equal('def')
-        // setTimeout(function () {
-        //   expect(refs.txtInput.textContent).to.be.equal('def')
-        //   done()
-        // }, 25)
-        debugger
         done()
       })
-      console.log('input value:', input.value)
       expect(input.value).to.equal('abc')
       input.value = 'def'
       helper.utils.dispatchEvent(input, 'change')

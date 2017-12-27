@@ -17,7 +17,7 @@ module.exports = {
         setTimeout(() => {
           this.show = true
           setTimeout(() => {
-            this.done && this.done('test-first-screen-appear')
+            this.done('watchAppear')
           }, 100)
         }, 100)
       }, 100)

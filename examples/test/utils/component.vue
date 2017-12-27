@@ -11,10 +11,10 @@
     },
     methods: {
       appear: function (evt) {
-        window._spy_first_screen_appear && window._spy_first_screen_appear(evt)
+        this.callSpy('utils.component', 'appear', evt)
       },
       disappear: function (evt) {
-        window._spy_first_screen_appear && window._spy_first_screen_appear(evt)
+        this.callSpy('utils.component', 'disappear', evt)
       }
     }
   }

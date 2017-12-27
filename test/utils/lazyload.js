@@ -36,7 +36,6 @@ describe('utils', function () {
       document.body.appendChild(node)
       fireLazyload([node])
       node.addEventListener('load', () => {
-        debugger
         setTimeout(() => {
           expect(node.style.backgroundImage.replace(/"/g, '')
             .replace(urlReg, '')).to.be.equal('url(' + validImageBlack + ')')

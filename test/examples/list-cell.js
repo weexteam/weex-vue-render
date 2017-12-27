@@ -25,9 +25,9 @@ init('list & cell example', (Vue, helper) => {
   const { utils, createVm } = helper
 
   before(() => {
-    helper.register('list', list)
-    helper.register('cell', cell)
-    helper.register('text', text)
+    helper.install(list)
+    helper.install(cell)
+    helper.install(text)
   })
 
   it('create simple list component', () => {

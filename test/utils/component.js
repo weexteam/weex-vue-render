@@ -21,22 +21,19 @@ import { init } from '../helper'
 import * as components from '../../src/utils/component'
 
 init('utils component', (Vue, helper) => {
-  const spys = {
-    'appear': sinon.spy(),
-    'disappear': sinon.spy()
-  }
-  window._spy_first_screen_appear = function (evt) {
-    const spy = spys[evt.type]
-    spy && spy(evt)
-  }
 
-  const id = 'test-first-screen-appear'
-  let vm = null
+  const id = 'utils.component'
+  const spys = ['appear', 'disappear']
+  let vm
 
   before(() => {
-    vm = helper.createVm(helper.bundles.utils.component, id)
-    vm.$el.style.height = '100px'
+    vm = helper.createVm(id, { spys })
   })
+
+  after(() => {
+    helper.clear(id)
+  })
+
   describe('component functions', () => {
     it('getParentScroller', () => {
       const { getParentScroller } = components
@@ -44,10 +41,13 @@ init('utils component', (Vue, helper) => {
       expect(getParentScroller(vm)).to.equal(document.body)
     })
   })
+
   describe('watchAppear', () => {
     it('should work when mounted and updated.', function (done) {
-      helper.registerDone(id, () => {
-        const { appear: appearSpy, disappear: disappearSpy } = spys
+      const subId = 'watchAppear'
+      helper.registerDone(id, subId, callback => {
+        const appearSpy = helper.getSpy(id, spys[0])
+        const disappearSpy = helper.getSpy(id, spys[1])
         expect(appearSpy.callCount).to.equal(2)
         expect(disappearSpy.callCount).to.equal(1)
         expect(appearSpy.args[0][0].type).to.equal('appear')
@@ -57,15 +57,9 @@ init('utils component', (Vue, helper) => {
         expect(appearSpy.args[1][0].direction).to.not.exist
         expect(disappearSpy.args[0][0].direction).to.not.exist
         setTimeout(() => {
-          done()
-          helper.unregisterDone(id)
+          callback(done)
         }, 100)
       })
     })
-  })
-  after(() => {
-    vm.$destroy()
-    vm = null
-    helper.clear(id)
   })
 })

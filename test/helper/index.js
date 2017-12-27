@@ -25,8 +25,7 @@ import { base, style } from '../../src/mixins'
 import weex from '../../src/env/weex'
 import { setVue } from '../../src/env'
 import helper from './main'
-import { doneMixin } from './mixin'
-
+import { doneMixin, spyMixin } from './mixin'
 /**
  * Describe tests for current versions of Vue.
  */
@@ -44,6 +43,7 @@ export function init (title, fn) {
 
       // for test only mixins.
       Vue.mixin(doneMixin)
+      Vue.mixin(spyMixin)
 
       window.global = window
       global.weex = weex
