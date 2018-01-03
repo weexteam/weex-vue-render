@@ -17,12 +17,14 @@
  * under the License.
  */
 import base from './base'
+import event from './event'
 import style from './style'
 import inputCommon from './input-common'
 import sticky from './sticky'
 
 export {
   base,
+  event,
   style,
   inputCommon,
   sticky
