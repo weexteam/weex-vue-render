@@ -18,7 +18,7 @@
  */
 import weex from './env'
 import { setVue } from './env'
-import { base, style, sticky } from './mixins'
+import { base, event, style, sticky } from './mixins'
 
 /**
  * init weex.
@@ -55,6 +55,7 @@ function init (Vue/*, options = {}*/) {
   }
 
   Vue.mixin(base)
+  Vue.mixin(event)
   Vue.mixin(style)
   Vue.mixin(sticky)
 }

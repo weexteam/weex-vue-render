@@ -63,11 +63,15 @@ module.exports = function (config) {
     frameworks: ['mocha', 'sinon-chai'],
     browsers: ['PhantomJS'],
     files: [
-      resolve('test/core/style.js'),
-      resolve('test/components/input.js'),
+      resolve('test/components/a.js'),
       resolve('test/components/div.js'),
-      // resolve('test/components/a.js'),
+      resolve('test/components/input.js'),
+      resolve('test/components/image.js'),
+      resolve('test/components/text.js'),
+      resolve('test/components/custom-component.js'),
+      resolve('test/core/style.js'),
       '../test/utils/*.js'
+      ///////////////////////////////////////////
       // '../test/core/*.js',
       // '../test/!(utils|core)/*.js'
       // '../test/components/switch.js',

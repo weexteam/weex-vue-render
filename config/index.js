@@ -1,6 +1,8 @@
 var path = require('path')
 var resolve = require('../build/utils').resolve
 module.exports = {
+  // debug: true,
+  debug: false,
   build: {
     env: require('./prod.env'),
     index: resolve('public/index.html'),

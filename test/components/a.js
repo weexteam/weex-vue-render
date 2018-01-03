@@ -17,7 +17,6 @@
  * under the License.
  */
 import { init } from '../helper'
-import a from '../../src/components/a'
 
 init('<a> component', (Vue, helper) => {
   const { utils } = helper
@@ -27,7 +26,6 @@ init('<a> component', (Vue, helper) => {
   const spys = ['clickInnerDiv']
 
   before(() => {
-    helper.install(a)
     vm = helper.createVm('components.a', {
       spys
     })
@@ -39,22 +37,21 @@ init('<a> component', (Vue, helper) => {
   })
 
   it('simple <a> component', () => {
-    const el = refs.simple.$el
+    const el = refs.simple
     expect(el.tagName.toLowerCase()).to.equal('a')
     const classListArr = utils.toArray(el.classList)
-    expect('weex-a').to.be.oneOf(classListArr)
-    expect('weex-ct').to.be.oneOf(classListArr)
+    expect(classListArr).to.have.members(['weex-a', 'weex-ct'])
     expect(el.getAttribute('weex-type')).to.be.equal('a')
   })
 
   it('<a> with href', () => {
     const href = '//m.taobao.com'
-    const el = refs.withHref.$el
+    const el = refs.withHref
     expect(el.getAttribute('href')).to.be.equal(href)
   })
 
   it('<a> with children <div>', () => {
-    const el = refs.withChildren.$el
+    const el = refs.withChildren
     expect(el.children.length).to.be.equal(1)
     expect(el.children[0].tagName).to.match(/^(?:html:)?div$/i)
     expect(el.children[0].getAttribute('weex-type')).to.be.equal('div')
@@ -73,7 +70,7 @@ init('<a> component', (Vue, helper) => {
 
   it('click outside <a> with inner <div>', (done) => {
     location.hash = ''
-    const el = refs.withChildren.$el
+    const el = refs.withChildren
     helper.click(el, () => {
       expect(location.hash).to.equal('#withChildren')
       location.hash = ''

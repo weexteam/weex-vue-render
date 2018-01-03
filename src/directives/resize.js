@@ -16,18 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import {
-  fireLazyload,
-  getThrottleLazyload
-} from '../../src/utils/lazyload'
+const valMap = {
+  contain: 'contain',
+  cover: 'cover',
+  stretch: '100% 100%'
+}
+const vals = Object.keys(valMap)
+const defaultVal = 'stretch'
 
-describe('utils', function () {
-  describe('lazyload', function () {
-    it('fireLazyload', () => {
-      expect(typeof fireLazyload).to.equal('function')
+export default {
+  init (weex) {
+    weex.__vue__.directive('weex-resize', function (el, binding) {
+      if (el.tagName.toLowerCase() !== 'figure') {
+        return
+      }
+      let value = binding.value
+      const oldValue = binding.oldvalue
+      if (value === oldValue) {
+        return
+      }
+      if (vals.indexOf(value) <= -1) {
+        value = defaultVal
+      }
+      el.style.backgroundSize = valMap[value]
     })
-    it('getThrottleLazyload', () => {
-      expect(typeof getThrottleLazyload).to.equal('function')
-    })
-  })
-})
+  }
+}

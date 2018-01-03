@@ -21,11 +21,12 @@ import './env'
 /* istanbul ignore next */
 import Vue from 'vue/dist/vue.runtime.esm.js'
 // import { base, scrollable, style, inputCommon } from '../../../render/vue/mixins'
-import { base, style } from '../../src/mixins'
+import { base, style, event } from '../../src/mixins'
 import weex from '../../src/env/weex'
 import { setVue } from '../../src/env'
 import helper from './main'
 import { doneMixin, spyMixin } from './mixin'
+import directives from '../../src/directives'
 /**
  * Describe tests for current versions of Vue.
  */
@@ -40,6 +41,7 @@ export function init (title, fn) {
 
       Vue.mixin(base)
       Vue.mixin(style)
+      Vue.mixin(event)
 
       // for test only mixins.
       Vue.mixin(doneMixin)
@@ -48,6 +50,11 @@ export function init (title, fn) {
       window.global = window
       global.weex = weex
       setVue(Vue)
+
+      // set directives
+      for (const k in directives) {
+        weex.install(directives[k])
+      }
     })
 
     /**

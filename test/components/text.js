@@ -16,71 +16,47 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import semver from 'semver'
 import { init } from '../helper'
-import text from '../../src/components/text'
 
 init('<text> component', (Vue, helper) => {
-  const { utils, compile } = helper
+  const id = 'components.text'
+  const { utils } = helper
+  let vm, refs
 
   before(() => {
-    helper.install(text)
+    vm = helper.createVm(id)
+    refs = vm.$refs
   })
 
-  it('create simple text component', () => {
-    const vm = compile(`<text>abc</text>`)
-
-    expect(vm.$el.tagName.toLowerCase()).to.be.equal('p')
-    expect(vm.$el.textContent).to.be.equal('abc')
+  after(() => {
+    helper.clear(id)
   })
 
-  it('empty text component', () => {
-    const vm = compile(`<text></text>`)
-
-    expect(vm.$el.tagName.toLowerCase()).to.be.equal('p')
-    expect(vm.$el.innerHTML).to.be.equal('')
+  it('simple <text>', () => {
+    const { simple: simpleText } = refs
+    expect(simpleText instanceof HTMLElement).to.be.true
+    expect(simpleText.tagName.toLowerCase()).to.be.equal('p')
+    expect(simpleText.textContent).to.be.equal('simple text')
+    expect(utils.toArray(simpleText.classList))
+      .to.include.members(['weex-el', 'weex-text', 'txt'])
   })
 
-  it('lines style', () => {
-    const vm = compile(`<text style="lines:5;">abc</text>`)
-    if (semver.gt(Vue.version, '2.0.8')) {
-      expect(vm.$el.style.overflow).to.be.equal('hidden')
-      expect(vm.$el.style.textOverflow).to.be.equal('ellipsis')
-      expect(vm.$el.style.webkitLineClamp).to.be.equal('5')
-    }
+  it('empty <text>', () => {
+    const { empty: emptyText } = refs
+    expect(emptyText instanceof HTMLElement).to.be.true
+    expect(emptyText.tagName.toLowerCase()).to.be.equal('p')
+    expect(emptyText.textContent).to.be.equal('')
   })
 
-  it('inline styles', () => {
-    const vm = compile(`<text style="color:blue">abc</text>`)
-
-    if (semver.gt(Vue.version, '2.0.8')) {
-      expect(vm.$el.style.color).to.be.equal('blue')
-    }
+  it('<text> with \'lines: 1\'', () => {
+    const { lines: line1Text } = refs
+    expect(line1Text instanceof HTMLElement).to.be.true
+    expect(line1Text.tagName.toLowerCase()).to.be.equal('p')
+    expect(utils.toArray(line1Text.classList))
+      .to.include.members(['weex-el', 'weex-text', 'txt', 'lines'])
+    const cs = getComputedStyle(line1Text)
+    expect(cs.overflow).to.be.equal('hidden')
+    expect(cs.WebkitLineClamp).to.be.equal('1')
+    expect(cs.textOverflow).to.be.equal('ellipsis')
   })
-
-  // Not sure about this feature.
-  it('class property', () => {
-    const vm = compile(`<text class="title"></text>`)
-    expect(utils.toArray(vm.$el.classList)).to.include.members(['weex-text', 'weex-el', 'title'])
-  })
-
-  it('value property', () => {
-    const vm = compile(`<text value="A"></text>`)
-    expect(vm.$el.innerHTML).to.be.equal('A')
-  })
-
-  it('both have value and content', () => {
-    const vm = compile(`<text value="A">B</text>`)
-    expect(vm.$el.innerHTML).to.be.equal('B')
-  })
-
-  // describe.skip('error usage (on native)', () => {
-  //   it('contain other tags', () => {
-  //     const vm = compile(`<text><b>abc</b></text>`)
-  //     const span = vm.$el.children[0]
-
-  //     expect(span.tagName).to.be.equal('SPAN')
-  //     expect(span.innerHTML).to.be.equal('')
-  //   })
-  // })
 })

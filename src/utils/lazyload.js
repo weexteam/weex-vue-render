@@ -22,6 +22,7 @@ import { createEvent, dispatchEvent } from './event'
 import { throttle } from './func'
 
 const lazyloadAttr = 'data-img-src'
+const placeholderAttr = 'placeholder'
 
 function preLoadImg (src,
   loadCallback,
@@ -113,10 +114,10 @@ export function fireLazyload (el, ignoreVisibility) {
   for (let i = 0; i < imgs.length; i++) {
     const img = imgs[i]
     if (typeof ignoreVisibility === 'boolean' && ignoreVisibility) {
-      applySrc(img, img.getAttribute(lazyloadAttr), img.getAttribute('img-placeholder'))
+      applySrc(img, img.getAttribute(lazyloadAttr), img.getAttribute(placeholderAttr))
     }
     else if (isElementVisible(img, getCtScroller(el))[0]) {
-      applySrc(img, img.getAttribute(lazyloadAttr), img.getAttribute('img-placeholder'))
+      applySrc(img, img.getAttribute(lazyloadAttr), img.getAttribute(placeholderAttr))
     }
   }
 }

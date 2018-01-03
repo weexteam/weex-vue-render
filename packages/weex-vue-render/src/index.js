@@ -2,6 +2,7 @@ import weex from '../../../src'
 
 import components from '../../../src/components'
 import modules from '../../../src/modules'
+import directives from '../../../src/directives'
 
 const preInit = weex.init
 
@@ -12,6 +13,10 @@ weex.init = function () {
   plugins.forEach(function (plugin) {
     weex.install(plugin)
   })
+
+  for (const k in directives) {
+    weex.install(directives[k])
+  }
 }
 
 if (global.Vue) {

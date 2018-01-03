@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs-extra')
 const del = require('del')
 const { resolve } = require('./utils')
+const debug = require('../config').debug
 
 const examplesDirectory = resolve('examples')
 const entriesDirectory = resolve('examples/bundle-entry')
@@ -46,24 +47,27 @@ function getEntries (isNative, noEntry) {
 }
 
 exports.getWebEntries = function (noEntry) {
-  if (!noEntry) {
-    del.sync(resolve('examples/bundle-entry/web/**'))
+  if (!debug) {
+    if (!noEntry) {
+      del.sync(resolve('examples/bundle-entry/web/**'))
+    }
+    return getEntries(false, noEntry)
   }
-  const entries = getEntries(false, noEntry)
-  // for test.
-  // const entryDir = 'web'
-  // const entryName = 'hello'
-  // const entryPath = path.join(entryDir, entryName)
-  // fs.outputFileSync(
-  //   resolve(path.join('examples/bundle-entry', entryPath + '.js')),
-  //   getEntryFileContent(
-  //     resolve(path.join('examples', entryName + '.vue')),
-  //     false
-  //   )
-  // )
-  // const entries = {}
-  // entries[`${entryDir}/${entryName}`]
-  //   = resolve(`examples/bundle-entry/${entryDir}/${entryName}.js`)
+
+  // debug === true.
+  const entryDir = 'web'
+  const entryName = 'debug/tap-bubble-bug'
+  const entryPath = path.join(entryDir, entryName)
+  fs.outputFileSync(
+    resolve(path.join('examples/bundle-entry', entryPath + '.js')),
+    getEntryFileContent(
+      resolve(path.join('examples', entryName + '.vue')),
+      false
+    )
+  )
+  const entries = {}
+  entries[`${entryDir}/${entryName}`]
+    = resolve(`examples/bundle-entry/${entryDir}/${entryName}.js`)
   return entries
 }
 

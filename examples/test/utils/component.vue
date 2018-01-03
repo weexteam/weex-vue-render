@@ -11,10 +11,10 @@
     },
     methods: {
       appear: function (evt) {
-        this.callSpy('utils.component', 'appear', evt)
+        this.callSpy('appear', evt)
       },
       disappear: function (evt) {
-        this.callSpy('utils.component', 'disappear', evt)
+        this.callSpy('disappear', evt)
       }
     }
   }

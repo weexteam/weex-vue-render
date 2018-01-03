@@ -16,6 +16,11 @@ const {
 } = require('./get-entries')
 const resolve = require('./utils').resolve
 
+const debug = config.debug
+if (debug) {
+  process.env.NODE_ENV = 'development'
+}
+
 let isTest = false
 const argv = process.argv[2]
 if (argv === '--test') {
@@ -52,9 +57,24 @@ function generateTestMeta (entries, file) {
   fs.outputFileSync(file, content)
 }
 
-if (isTest) {
+if (debug || isTest) {
   // remove uglify plugin.
   webConfig.plugins.pop()
+}
+
+if (debug) {
+  webConfig.plugins.push(new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)())
+  webConfig = merge(webConfig, {
+    module: {
+      rules: [{
+        test: /\.vue$/,
+        loader: resolve('./test-loader')
+      }]
+    }
+  })
+}
+
+if (isTest) {
   webConfig = merge(webConfig, {
     output: {
       path: resolve('test/bundles'),
@@ -65,7 +85,7 @@ if (isTest) {
     devtool: false
   })
   del.sync(resolve('test/bundles'))
-  // generate test/bundles.js
+  // generate test/bundles.js5t
   generateTestMeta(webConfig.entry, resolve('test/bundles/index.js'))
 }
 

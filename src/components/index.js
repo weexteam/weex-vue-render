@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import a from './a'
+// import a from './a'
 // import div from './div'
 // import image from './image'
 import input from './input'
@@ -29,7 +29,7 @@ import video from './video'
 import web from './web'
 
 export default [
-  a,
+  // a,
   // div,
   // image,
   input,

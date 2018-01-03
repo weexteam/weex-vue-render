@@ -34,32 +34,47 @@ init('utils component', (Vue, helper) => {
     helper.clear(id)
   })
 
-  describe('component functions', () => {
-    it('getParentScroller', () => {
-      const { getParentScroller } = components
-      expect(getParentScroller).to.be.a('function')
-      expect(getParentScroller(vm)).to.equal(document.body)
-    })
+  it('getParentScroller', () => {
+    const { getParentScroller } = components
+    expect(getParentScroller).to.be.a('function')
+    expect(getParentScroller(vm)).to.equal(document.body)
   })
 
-  describe('watchAppear', () => {
-    it('should work when mounted and updated.', function (done) {
-      const subId = 'watchAppear'
-      helper.registerDone(id, subId, callback => {
-        const appearSpy = helper.getSpy(id, spys[0])
-        const disappearSpy = helper.getSpy(id, spys[1])
-        expect(appearSpy.callCount).to.equal(2)
-        expect(disappearSpy.callCount).to.equal(1)
-        expect(appearSpy.args[0][0].type).to.equal('appear')
-        expect(appearSpy.args[1][0].type).to.equal('appear')
-        expect(disappearSpy.args[0][0].type).to.equal('disappear')
-        expect(appearSpy.args[0][0].direction).to.not.exist
-        expect(appearSpy.args[1][0].direction).to.not.exist
-        expect(disappearSpy.args[0][0].direction).to.not.exist
-        setTimeout(() => {
-          callback(done)
-        }, 100)
-      })
+  it('contains', () => {
+    const { contains } = components
+    const ct = document.createElement('div')
+    ct.id = 'contains_ct'
+    const target = document.createElement('div')
+    target.id = 'contains_target'
+    ct.appendChild(target)
+    expect(contains(ct, target)).to.be.true
+    expect(contains(target, ct)).to.be.false
+    expect(contains(ct, ct)).to.be.false
+    expect(contains(ct, ct, true)).to.be.true
+    const sibling = document.createElement('div')
+    sibling.id = 'contains_sibling'
+    ct.appendChild(sibling)
+    expect(contains(ct, sibling)).to.be.true
+    expect(contains(target, sibling)).to.be.false
+    expect(contains(sibling, target)).to.be.false
+  })
+
+  it('watchAppear', function (done) {
+    const subId = 'watchAppear'
+    helper.registerDone(id, subId, callback => {
+      const appearSpy = helper.getSpy(id, spys[0])
+      const disappearSpy = helper.getSpy(id, spys[1])
+      expect(appearSpy.callCount).to.equal(2)
+      expect(disappearSpy.callCount).to.equal(1)
+      expect(appearSpy.args[0][0].type).to.equal('appear')
+      expect(appearSpy.args[1][0].type).to.equal('appear')
+      expect(disappearSpy.args[0][0].type).to.equal('disappear')
+      expect(appearSpy.args[0][0].direction).to.not.exist
+      expect(appearSpy.args[1][0].direction).to.not.exist
+      expect(disappearSpy.args[0][0].direction).to.not.exist
+      setTimeout(() => {
+        callback(done)
+      }, 100)
     })
   })
 })

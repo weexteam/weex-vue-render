@@ -16,18 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import {
-  fireLazyload,
-  getThrottleLazyload
-} from '../../src/utils/lazyload'
+import resize from './resize'
 
-describe('utils', function () {
-  describe('lazyload', function () {
-    it('fireLazyload', () => {
-      expect(typeof fireLazyload).to.equal('function')
-    })
-    it('getThrottleLazyload', () => {
-      expect(typeof getThrottleLazyload).to.equal('function')
-    })
-  })
-})
+export default {
+  resize
+}

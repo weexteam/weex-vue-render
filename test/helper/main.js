@@ -107,7 +107,11 @@ const helper = {
   },
 
   callSpy (id, spyName, ...args) {
-    return this.data[id].spy[spyName](...args)
+    try {
+      return this.data[id].spy[spyName](...args)
+    } catch (err) {
+      console.log('!!!!!! error ===>', id, spyName, this.data, this.data[id])
+    }
   },
 
   getSpys (id) {

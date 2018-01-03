@@ -21,6 +21,49 @@ import { createEvent } from './event'
 import config from '../config'
 
 /**
+ * whether ct contains el.
+ * @param {HTMLElement} container
+ * @param {HTMLElement} target
+ */
+export function contains (container, target, includeSelf) {
+  if (includeSelf && container === target) {
+    return true
+  }
+  return container.contains
+    ? container.contains(target) && (container !== target)
+    : container.compareDocumentPosition(target) & 16 !== 0
+}
+
+export function insideA (el) {
+  if (typeof el._insideA === 'boolean') {
+    return el._insideA
+  }
+  let parent = el.parentElement
+  const parents = []
+  const checkParents = function (inside) {
+    for (let i = 0, l = parents.length; i < l; i++) {
+      parents[i]._insideA = inside
+    }
+  }
+  const check = function (inside) {
+    el._insideA = inside
+    checkParents(inside)
+    return inside
+  }
+  while (parent !== document.body) {
+    if (parent.tagName.toLowerCase() === 'a') {
+      return check(true)
+    }
+    if (typeof parent._insideA === 'boolean') {
+      return check(parent._insideA)
+    }
+    parents.push(parent)
+    parent = parent.parentElement
+  }
+  return check(false)
+}
+
+/**
  * get parent scroller vComponent.
  * return a VueComponent or null.
  */

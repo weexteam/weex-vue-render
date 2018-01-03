@@ -8,7 +8,7 @@
     </a>
     <a ref="withChildren" href="#withChildren">
       <div ref="innerDiv" @click="clickInnerDiv">
-        <text>A WITH CHILDREN</text>
+        <text>A WITH CHILDREN...</text>
       </div>
     </a>
   </div>
@@ -18,7 +18,7 @@
 export default {
   methods: {
     clickInnerDiv () {
-      this.callSpy('components.a', 'clickInnerDiv')
+      this.callSpy && this.callSpy('clickInnerDiv')
     }
   }
 }

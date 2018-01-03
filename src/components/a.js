@@ -60,10 +60,6 @@ function getA (weex) {
       }
     },
     render (createElement) {
-      /* istanbul ignore next */
-      // if (process.env.NODE_ENV === 'development') {
-      //   validateStyles('a', this.$vnode.data && this.$vnode.data.staticStyle)
-      // }
       return createElement('html:a', {
         attrs: {
           'weex-type': 'a',
