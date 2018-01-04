@@ -98,11 +98,14 @@ function getWaterfall (weex) {
 
         for (let i = 0; i < len; i++) {
           const vnode = slots[i]
-          const tag = vnode.componentOptions && vnode.componentOptions.tag
+          const tag =
+            vnode.componentOptions
+            && vnode.componentOptions.tag
+            || vnode.tag
           if (tag === 'refresh' || tag === 'loading') {
             continue
           }
-          if (tag === 'cell') {
+          if (tag === 'section') {  // cell
             break
           }
           if (tag === 'header') {
@@ -112,11 +115,14 @@ function getWaterfall (weex) {
 
         for (let i = len - 1; i >= 0; i--) {
           const vnode = slots[i]
-          const tag = vnode.componentOptions && vnode.componentOptions.tag
+          const tag =
+            vnode.componentOptions
+            && vnode.componentOptions.tag
+            || vnode.tag
           if (tag === 'refresh' || tag === 'loading') {
             continue
           }
-          if (tag === 'cell') {
+          if (tag === 'section') { // cell
             break
           }
           if (tag === 'header') {
@@ -125,13 +131,14 @@ function getWaterfall (weex) {
         }
 
         this._cells = slots.filter(vnode => {
-          if (!vnode.tag || !vnode.componentOptions) return false
-          const tag = vnode.componentOptions.tag
+          const cmpOpts = vnode.componentOptions
+          if (!vnode.tag && !cmpOpts) return false
+          const tag = cmpOpts && cmpOpts.tag || vnode.tag
           if (tag === 'refresh' || tag === 'loading') {
             this[`_${tag}`] = vnode
             return false
           }
-          if (tag !== 'cell') {
+          if (tag !== 'section') {
             this._others.push(vnode)
             return false
           }
