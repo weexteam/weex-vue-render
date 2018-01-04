@@ -180,13 +180,23 @@ else {
   console.log('\nPlease specify the package you want to build. [native, runtime, browser, vue]')
 }
 
+function copyReadme (pkgName) {
+  if (pkgName === 'weex-vue-render') {
+    const fromMd = fs.readFileSync(resolve('README.md'))
+    const toMdPath = resolve('packages/weex-vue-render/README.md')
+    fs.outputFileSync(toMdPath, fromMd)
+  }
+}
+
 function copyVersion (pkgName) {
-  if (pkgName === 'vue') {
+  if (pkgName === 'weex-vue-render') {
     const fromPkg = fs.readJsonSync(resolve('package.json'))
-    const toPkgPath = resolve('packages/weex-vue-render')
+    const toPkgPath = resolve('packages/weex-vue-render/package.json')
     const toPkg = fs.readJsonSync(toPkgPath)
     toPkg.version = fromPkg.version
-    fs.outputJsonSync(toPkgPath, toPkg)
+    fs.outputJsonSync(toPkgPath, toPkg, {
+      spaces: 2
+    })
   }
 }
 
@@ -254,6 +264,7 @@ function build (name) {
         fs.copy(config.output.file, utils.resolve(`public/assets/${basename}`))
         // cpy version info to packages/weex-vue-render
         copyVersion(pkgName)
+        copyReadme(pkgName)
         const cjsConfig = getConfig(pkgName, false, {
           format: 'cjs',
           _isProd: true
