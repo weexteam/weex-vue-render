@@ -85,7 +85,7 @@
     "weex-devtool": "^0.2.83",
     "weex-loader": "^0.5.3",
     "weex-styler": "^0.2.2",
-    "weex-vue-precompiler": "^0.1.13",
+    "weex-vue-precompiler": "^0.1.14",
     "wxv-transformer": "^0.1.3",
     "zlib": "^1.0.5"
   }

@@ -68,6 +68,7 @@ module.exports = function (config) {
       resolve('test/components/input.js'),
       resolve('test/components/image.js'),
       resolve('test/components/text.js'),
+      resolve('test/components/cell.js'),
       resolve('test/components/custom-component.js'),
       resolve('test/core/style.js'),
       '../test/utils/**/*.js',
@@ -96,7 +97,7 @@ module.exports = function (config) {
         { type: 'text-summary', dir: resolve('coverage'), subdir: 'weex-vue-render' }
       ]
     },
-    browserDisconnectTimeout:10000,
+    browserDisconnectTimeout: 10000,
     preprocessors: {
       '../test/**/*.js': ['rollup', 'coverage']
       // '../src/**/*.js': ['rollup', 'coverage']

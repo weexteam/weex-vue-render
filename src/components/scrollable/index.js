@@ -20,7 +20,7 @@
 import list from './list'
 import scroller from './scroller'
 import waterfall from './waterfall'
-import cell from './cell'
+// import cell from './cell'
 import header from './header'
 import loading from './loading'
 import refresh from './refresh'
@@ -32,7 +32,7 @@ const modules = [
   list,
   scroller,
   waterfall,
-  cell,
+  // cell,
   header,
   loading,
   refresh,

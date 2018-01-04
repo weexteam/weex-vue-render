@@ -2,7 +2,7 @@
   <list class="list" @loadmore="loadmore" :loadmoreoffset="0">
     <text class="btn" @click="loadmore">ADD {{groupCount}} CELLS</text>
     <text class="btn clear" @click="clear">CLEAR ALL</text>
-    <div class="cell" v-for="item in shopList" :id="`item-${item.id}`" :key="item.id" :scope="item.scopeValue" @click="oncellclick(item.id)">
+    <cell class="cell" v-for="item in shopList" :id="`item-${item.id}`" :key="item.id" :scope="item.scopeValue" @click="oncellclick(item.id)">
       <div class="shop-div">
         <div class="shop-header">
           <div class="shop-header-icon">
@@ -134,7 +134,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </cell>
   </list>
 </template>
 
