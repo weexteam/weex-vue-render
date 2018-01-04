@@ -17,18 +17,31 @@
  * under the License.
  */
 import dom from '../../src/modules/dom'
-describe('dom module', () => {
+import helper from '../helper/main'
+
+helper.initWithWeex('dom module', {
+  plugins: [dom]
+}, () => {
   const callback = sinon.spy()
-  weex.install(dom)
-  const domModule = weex.requireModule('dom')
+  let domModule, node, vnode
+
+  before(() => {
+    node = document.createElement('div')
+    document.body.appendChild(node)
+    vnode = {
+      $el: node
+    }
+    domModule = weex.requireModule('dom')
+  })
+
+  after(() => {
+    node.parentElement.removeChild(node)
+  })
+  
   it('should scrollToElement be worked', (done) => {
     const {
       scrollToElement
     } = domModule
-    const node = document.createElement('div')
-    const vnode = {
-      $el: node
-    }
     const options = {
       offset: 100
     }
@@ -47,6 +60,7 @@ describe('dom module', () => {
       done()
     }, 500)
   })
+
   it('should getComponentRect be worked', () => {
     const {
       getComponentRect
@@ -79,12 +93,6 @@ describe('dom module', () => {
     expect(message.size.height).to.be.equal(recalc({
       height: 100
     }).height)
-    expect(message.contentSize.width).to.be.equal(recalc({
-      width: 100
-    }).width)
-    expect(message.contentSize.height).to.be.equal(recalc({
-      height: 100
-    }).height)
     expect(callback.callCount).to.be.equal(1)
 
     // while node is a viewport
@@ -102,15 +110,10 @@ describe('dom module', () => {
     expect(message.size.bottom).to.be.equal(recalc({
       bottom: document.documentElement.clientHeight
     }).bottom)
-    expect(message.contentSize.width).to.be.equal(recalc({
-      bottom: document.documentElement.offsetWidth
-    }).bottom)
-    expect(message.contentSize.height).to.be.equal(recalc({
-      bottom: document.documentElement.offsetHeight
-    }).bottom)
     expect(callback.callCount).to.be.equal(2)
     document.body.removeChild(node)
   })
+
   it('should addRule be worked', () => {
     const {
       addRule

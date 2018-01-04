@@ -70,7 +70,8 @@ module.exports = function (config) {
       resolve('test/components/text.js'),
       resolve('test/components/custom-component.js'),
       resolve('test/core/style.js'),
-      '../test/utils/*.js'
+      '../test/utils/**/*.js',
+      '../test/modules/**/*.js'
       ///////////////////////////////////////////
       // '../test/core/*.js',
       // '../test/!(utils|core)/*.js'
@@ -82,9 +83,6 @@ module.exports = function (config) {
       '../test/vender/**/*.js',
       '../test/data/**/*.js'
     ],
-
-    // singleRun: false,
-    singleRun: true,
 
     reporters: ['mocha', 'coverage'],
     coverageReporter: {
@@ -115,6 +113,9 @@ module.exports = function (config) {
       'karma-sinon-chai'
       // 'karma-sourcemap-loader',
       // 'karma-webpack'
-    ]
+    ],
+
+    // singleRun: false,
+    singleRun: true
   })
 }

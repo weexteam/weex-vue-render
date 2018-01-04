@@ -116,22 +116,24 @@ const weex = {
     if (!weexModules[name]) {
       weexModules[name] = {}
     }
-    if (!!meta && meta.mountType === 'full') {
+    if (!!meta && meta.registerType === 'assignment') {
       weexModules[name] = module
     }
-    for (const key in module) {
-      if (module.hasOwnProperty(key)) {
-        weexModules[name][key] = function () {
-          const called = weex._meta.apiCalled
-          if (!called[name]) {
-            called[name] = {}
+    else {
+      for (const key in module) {
+        if (module.hasOwnProperty(key)) {
+          weexModules[name][key] = function () {
+            const called = weex._meta.apiCalled
+            if (!called[name]) {
+              called[name] = {}
+            }
+            const calledMod = called[name]
+            if (!calledMod[key]) {
+              calledMod[key] = 0
+            }
+            calledMod[key]++
+            return module[key].apply(weex, arguments)
           }
-          const calledMod = called[name]
-          if (!calledMod[key]) {
-            calledMod[key] = 0
-          }
-          calledMod[key]++
-          return module[key].apply(weex, arguments)
         }
       }
     }

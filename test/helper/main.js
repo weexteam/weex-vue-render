@@ -18,6 +18,27 @@ const helper = {
     weex.install(plugin)
   },
 
+  initWithWeex (title, opts, fn) {
+    if (typeof opts === 'function') {
+      opts = null
+      fn = opts
+    }
+    return describe(title, () => {
+      before(() => {
+        window.global = window
+        window.weex = weex
+        if (opts) {
+          const { plugins } = opts
+          if (plugins) {
+            plugins.forEach(helper.install)
+          }
+        }
+      })
+
+      fn && fn(helper)
+    })
+  },
+
   /**
    * create a vm instance of Vue. and generate spys for the istance.
    * @param {String} id Also the bundle path. e.g. 'components.div'

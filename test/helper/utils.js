@@ -19,6 +19,8 @@
 /**
  * @fileOverview utils for tests.
  */
+import { extend } from '../../src/utils'
+
 export function toArray (list) {
   if (!list) return []
   return Array.prototype.slice.call(list)
@@ -39,6 +41,7 @@ export function isPhantom () {
 
 export function dispatchEvent (dom, type, opts) {
   const evt = new Event(type, { bubbles: true, cancelable: true })
+  extend(evt, opts)
   dom.dispatchEvent(evt)
 }
 

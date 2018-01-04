@@ -21,6 +21,6 @@ import websocket from './websocket'
 // TODO: rewrite the module meta
 export default {
   init: function (Weex) {
-    Weex.registerModule('webSocket', websocket, { mountType: 'full' })
+    Weex.registerModule('webSocket', websocket, { registerType: 'assignment' })
   }
 }

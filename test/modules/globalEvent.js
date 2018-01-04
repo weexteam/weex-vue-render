@@ -18,10 +18,18 @@
  */
 /*global Event*/
 import globalEvent from '../../src/modules/globalEvent'
-describe('globalEvent module', () => {
-  weex.install(globalEvent)
-  const globalEventModule = weex.requireModule('globalEvent')
+import helper from '../helper/main'
+
+helper.initWithWeex('globalEvent module', {
+  plugins: [globalEvent]
+}, () => {
+  let globalEventModule
   const callback = sinon.spy()
+  
+  before(function () {
+    globalEventModule = weex.requireModule('globalEvent')
+  })
+  
   it('should addEventListener be worked', () => {
     const {
       addEventListener
