@@ -3,13 +3,17 @@ import { insideA } from '../utils'
 export default {
   methods: {
     $stopOutterA (e) {
-      if (insideA(e.target)) {
-        e.preventDefault()
+      if (e && e.preventDefault && e.target) {
+        if (insideA(e.target)) {
+          e.preventDefault()
+        }
       }
     },
 
     $stopPropagation (e) {
-      e.stopPropagation()
+      if (e && e.stopPropagation) {
+        e.stopPropagation()
+      }
     }
   }
 }

@@ -35,7 +35,7 @@
           // module
           {name: root + '/modules/instance-api', title: 'Instance API'},
           {name: root + '/modules/modal', title: 'Modal'},
-          {name: root + '/modules/webSocket', title: 'WebSocket'},
+          {name: root + '/modules/websocket', title: 'Websocket'},
           {name: root + '/modules/stream', title: 'Stream'},
           {name: root + '/modules/storage',title:'Storage'},
           {name: root + '/modules/picker',title:'picker'},
