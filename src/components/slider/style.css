@@ -17,9 +17,8 @@
  * under the License.
  */
  
- .weex-slider-wrapper {
-  overflow-x: hidden;
-  overflow-y: visible;
+.weex-slider-wrapper {
+  overflow: hidden;
 }
 
 .weex-slider-inner {
