@@ -56,7 +56,8 @@ nav.weex-indicator {
 }
 
 div.weex-indicator-inner {
-  transform: translate(10rem, 0px)
+  transform: translate(10rem, 0px);
+  flex-direction: row;
 }
 
 .weex-indicator-item {
