@@ -1,4 +1,4 @@
-import weex from '../../src/env/weex'
+import weex from '../../src/weex/instance'
 import * as utils from './utils'
 import bundles from '../bundles'
 
@@ -146,6 +146,7 @@ const helper = {
   // mock mobile click events:
   // weex$tap first, and click in 200 ms later.
   click (el, cb) {
+    console.log('click', el.tagName, el.className)
     const tap = new Event('weex$tap', { bubbles: true, cancellable: true })
     el.dispatchEvent(tap)
     setTimeout(function () {

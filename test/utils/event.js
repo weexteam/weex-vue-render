@@ -29,6 +29,7 @@ describe('utils', function () {
       const target = clickEvent.target
       expect(target === '' || target === null).to.be.true
     })
+
     it('createBubblesEvent', () => {
       const {
         createBubblesEvent
@@ -40,6 +41,7 @@ describe('utils', function () {
       expect(target === '' || target === null).to.be.true
       expect(clickEvent.bubbles).to.be.true
     })
+
     it('createCustomEvent', () => {
       const {
         createCustomEvent
@@ -50,25 +52,24 @@ describe('utils', function () {
       const target = customEvent.target
       expect(target === '' || target === null).to.be.true
     })
-    it('dispatchEvent', (done) => {
+
+    it('dispatchNativeEvent', (done) => {
+      debugger
       const {
-        dispatchEvent
+        dispatchNativeEvent
       } = event
+      expect(dispatchNativeEvent).to.be.a('function')
       const node = document.createElement('div')
-      let expected
       const shouldBe = 'test'
       document.body.appendChild(node)
-      node.addEventListener('click', () => {
-        expected = shouldBe
+      node.addEventListener('click', (e) => {
+        expect(e.shouldBe).to.be.equal(shouldBe)
         document.body.removeChild(node)
-        expect(expected).to.be.equal(shouldBe)
         done()
       })
-      const clickevent = document.createEvent('HTMLEvents')
-      clickevent.initEvent('click', false, true)
-      dispatchEvent(node, clickevent)
-      expected(dispatchEvent).to.be.a('function')
+      dispatchNativeEvent(node, 'click', { shouldBe })
     })
+
     it('mapFormEvents', () => {
       const {
         mapFormEvents

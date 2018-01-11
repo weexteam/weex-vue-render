@@ -21,22 +21,13 @@
  * @fileOverview Input component.
  * Support v-model only if vue version is larger than 2.2.0
  */
-import { getComponentInlineStyle } from '../core'
+import { getComponentInlineStyle } from '../../core'
 
 let mapFormEvents, appendCss
 
 const ID_PREFIX_PLACEHOLDER_COLOR = 'wipt_plc_'
 const ID_PREFIX_INPUT = 'wipt_'
 let idCount = 0
-
-const _css = `
-.weex-input, .weex-textarea {
-  font-size: 0.426667rem;
-}
-.weex-input:focus, .weex-textarea:focus {
-  outline: none;
-}
-`
 
 function setPlaceholderColor (inputVm, placeholderColor) {
   if (!placeholderColor) {
@@ -125,8 +116,7 @@ function getInput (weex) {
         staticClass: 'weex-input weex-el',
         staticStyle: processStyle(this)
       })
-    },
-    _css
+    }
   }
 }
 

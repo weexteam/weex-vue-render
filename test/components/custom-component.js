@@ -21,12 +21,15 @@ import { init } from '../helper'
 init('custom component', (Vue, helper) => {
   const id = 'components.custom-component'
   const { utils } = helper
+  const spys = ['click', 'nativeClick']
   let vm, refs
 
   const content = 'this text should be just in 2 lines and the overflowed text would be replaced with ellipsis...'
 
   before(() => {
-    vm = helper.createVm(id)
+    vm = helper.createVm(id, {
+      spys
+    })
     refs = vm.$refs
   })
 
@@ -57,6 +60,27 @@ init('custom component', (Vue, helper) => {
       .to.include.members(['weex-el', 'weex-text', 'x-txt', 'txt'])
   })
 
+  it('x-text bound with @click', (done) => {
+    const { clickTxt } = refs
+    const el = clickTxt.$el
+    helper.click(el, () => {
+      const spy = helper.getSpy(id, spys[0])
+      expect(spy.callCount).to.equal(0)
+      done()
+    })
+  })
+
+  it('x-text bound with @click.native', (done) => {
+    const { nativeClickTxt } = refs
+    const el = nativeClickTxt.$el
+    helper.click(el, () => {
+      const spy = helper.getSpy(id, spys[1])
+      expect(spy.callCount).to.equal(1)
+      expect(spy.args[0][0].target).to.equal(el)
+      done()
+    })
+  })
+
   it('x-image resize cover', () => {
     const { img1: cmp } = refs
     expect(cmp instanceof weex.__vue__).to.be.true
@@ -79,7 +103,7 @@ init('custom component', (Vue, helper) => {
       .to.include.members(['weex-el', 'weex-image', 'x-image', 'img'])
   })
 
-  it('x-image binding resize', (done) => {
+  it('x-image binding resize & udpate resize', (done) => {
     const { img3: cmp } = refs
     expect(cmp instanceof weex.__vue__).to.be.true
     const el = cmp.$el

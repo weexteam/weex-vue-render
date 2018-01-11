@@ -16,36 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import weex from './instance'
+import * as core from '../core'
 
-const _css = `
-body > .weex-div {
-  min-height: 100%;
-}
-`
+import { inputCommon } from '../mixins'
 
-function getDiv (weex) {
-  const {
-    extractComponentStyle,
-    trimTextVNodes
-  } = weex
+window.global = window
+window.weex = weex
 
-  return {
-    name: 'weex-div',
-    render (createElement) {
-      return createElement('html:div', {
-        attrs: { 'weex-type': 'div' },
-        staticClass: 'weex-div weex-ct',
-        staticStyle: extractComponentStyle(this)
-      }, trimTextVNodes(this.$slots.default))
-    },
-    _css
-  }
-}
+weex._styleMap = {}
 
-export default {
-  init (weex) {
-    const div = getDiv(weex)
-    weex.registerComponent('div', div)
-    weex.registerComponent('container', div)
-  }
+; ['getComponentInlineStyle',
+  'extractComponentStyle',
+  // 'createEventMap',
+  'trimTextVNodes']
+  .forEach(function (method) {
+    weex[method] = core[method].bind(weex)
+  })
+
+weex.mixins = {
+  inputCommon
 }

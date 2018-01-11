@@ -23,7 +23,7 @@ import {
 } from '../../src/utils/style'
 import {
   init
-} from '../../src/env/viewport'
+} from '../../src/weex/viewport'
 
 function trimSpace (str) {
   return str.replace(/\s/g, '')

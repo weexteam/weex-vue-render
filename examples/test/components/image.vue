@@ -1,11 +1,11 @@
 <template>
   <div ref="ct" class="ct">
-    <image class="img" @load="loaded" ref="staticSrc" src="//img.alicdn.com/tfs/TB1OOl1SVXXXXc_XVXXXXXXXXXX-340-340.png"></image>
-    <image class="img" @load="loaded" ref="bindingSrc" :src="img"></image>
-    <image class="img" @load="placeholderLoad" ref="placeholder" src="//invalid.img" :placeholder="img"></image>
-    <image class="img" ref="cover" resize="cover" src="//img.alicdn.com/tfs/TB1OOl1SVXXXXc_XVXXXXXXXXXX-340-340.png"></image>
-    <image class="img" ref="contain" resize="contain" src="//img.alicdn.com/tfs/TB1OOl1SVXXXXc_XVXXXXXXXXXX-340-340.png"></image>
-    <image class="img" ref="stretch" resize="stretch" src="//img.alicdn.com/tfs/TB1OOl1SVXXXXc_XVXXXXXXXXXX-340-340.png"></image>
+    <image class="img" @load="loaded" ref="staticSrc" src="//img.alicdn.com/tfs/TB1OOl1SVXXXXc_XVXXXXXXXXXX-340-340.png" />
+    <image class="img" @load="loaded" ref="bindingSrc" :src="img" />
+    <image class="img" @load="placeholderLoad" ref="placeholder" src="//invalid.img" :placeholder="img" />
+    <image class="img" ref="cover" resize="cover" src="//img.alicdn.com/tfs/TB1OOl1SVXXXXc_XVXXXXXXXXXX-340-340.png" />
+    <image class="img" ref="contain" resize="contain" src="//img.alicdn.com/tfs/TB1OOl1SVXXXXc_XVXXXXXXXXXX-340-340.png" />
+    <image class="img" ref="stretch" resize="stretch" src="//img.alicdn.com/tfs/TB1OOl1SVXXXXc_XVXXXXXXXXXX-340-340.png" />
   </div>
 </template>
 

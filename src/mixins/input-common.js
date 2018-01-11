@@ -84,7 +84,7 @@ export default {
               const rightKeyType = findEnterKeyType(customKeyType)
               ev.returnKeyType = rightKeyType
               ev.value = ev.target.value
-              self.$emit('return', ev)
+              self.$el && self.$el.dispatchEvent(ev)
             }
           }
         }

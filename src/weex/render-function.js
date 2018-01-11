@@ -16,27 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import '../styles/reset.css'
-import '../styles/base.css'
+import {
+  transformRender
+} from '../core/node'
+import { isDef } from '../utils'
 
-import '../lib/gesture'
+let _inited = false
 
-import 'core-js/fn/array/from'
-import 'core-js/fn/object/assign'
-import 'core-js/fn/object/set-prototype-of'
-import 'core-js/modules/es6.object.to-string'
-import 'core-js/modules/es6.string.iterator'
-import 'core-js/modules/web.dom.iterable'
-import 'core-js/modules/es6.promise'
-
-import './global'
-
-export function setVue (vue) {
-  if (!vue) {
-    throw new Error('[Vue Render] Vue not found. Please make sure vue 2.x runtime is imported.')
+export default {
+  init (weex) {
+    if (_inited) {
+      return
+    }
+    _inited = true
+    const Vue = weex.__vue__
+    const _render = Vue.prototype._render
+    Vue.prototype._render = function () {
+      let weexRender = this._weexRender
+      const tag = this.$options && this.$options._componentTag
+      if (
+        !weexRender
+        && !isDef(weex._components[tag])
+      ) {
+        const origRender = this.$options.render
+        weexRender = this._weexRender = function (h, ...args) {
+          return origRender.call(this, transformRender(this, h), ...args)
+        }
+        this.$options.render = weexRender
+      }
+      return _render.call(this)
+    }
   }
-  global.weex.__vue__ = vue
-  console.log(`[Vue Render] install Vue ${vue.version}.`)
 }
-
-export default weex

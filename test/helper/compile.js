@@ -22,8 +22,8 @@ import './env'
 import Vue from 'vue/dist/vue.esm.js'
 // import { base, scrollable, style, inputCommon } from '../../../render/vue/mixins'
 import { base, style } from '../../src/mixins'
-import weex from '../../src/env/weex'
-import { setVue } from '../../src/env'
+import weex from '../../instance'
+import { setVue } from '../../src/weex'
 
 import * as utils from './utils'
 

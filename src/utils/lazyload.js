@@ -18,7 +18,7 @@
  */
 
 import { isElementVisible } from './component'
-import { createEvent, dispatchEvent } from './event'
+import { dispatchNativeEvent } from './event'
 import { throttle } from './func'
 
 const lazyloadAttr = 'data-img-src'
@@ -68,14 +68,14 @@ export function applySrc (item, src, placeholderSrc) {
       success: true,
       size: { naturalWidth, naturalHeight }
     }
-    dispatchEvent(item, createEvent(item, 'load', params))
+    dispatchNativeEvent(item, 'load', params)
     finallCb()
   }, function (evt) {
     const params = {
       success: false,
       size: { naturalWidth: 0, naturalHeight: 0 }
     }
-    dispatchEvent(item, createEvent(item, 'load', params))
+    dispatchNativeEvent(item, 'load', params)
     if (placeholderSrc) {
       preLoadImg(placeholderSrc, function () {
         item.style.backgroundImage = `url(${placeholderSrc || ''})`

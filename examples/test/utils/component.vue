@@ -1,6 +1,6 @@
 <template>
   <div>
-    <foo @appear="appear" @disappear="disappear"></foo>
+    <foo @appear.native="appear" @disappear.native="disappear"></foo>
   </div>
 </template>
 

@@ -19,7 +19,7 @@
 
 function getLoading () {
   const { extractComponentStyle } = weex
-  const { createEvent } = weex.utils
+  const { dispatchNativeEvent } = weex.utils
 
   return {
     name: 'weex-loading',
@@ -71,10 +71,12 @@ function getLoading () {
         this.pulling(offsetY)
       },
       pullingEnd () {
-        this.$el.style.transition = `height .2s`
+        this.$el && (this.$el.style.transition = `height .2s`)
         if (this.height >= this.viewHeight) {
           this.pulling(this.viewHeight)
-          this.$emit('loading', createEvent(this, 'loading'))
+          if (this.$el) {
+            dispatchNativeEvent(this.$el, 'loading')
+          }
         }
         else {
           this.pulling(0)

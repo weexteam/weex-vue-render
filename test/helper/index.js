@@ -22,8 +22,8 @@ import './env'
 import Vue from 'vue/dist/vue.runtime.esm.js'
 // import { base, scrollable, style, inputCommon } from '../../../render/vue/mixins'
 import { base, style, event } from '../../src/mixins'
-import weex from '../../src/env/weex'
-import { setVue } from '../../src/env'
+import weex from '../../src/weex/instance'
+import { setVue } from '../../src/weex'
 import helper from './main'
 import { doneMixin, spyMixin } from './mixin'
 import directives from '../../src/directives'
@@ -31,8 +31,9 @@ import directives from '../../src/directives'
  * Describe tests for current versions of Vue.
  */
 export function init (title, fn) {
-  return describe(title, () => {
+  return describe(title, function () {
     // let components = {}
+    this.timeout(15000)
 
     before(function () {
       const htmlRegex = /^html:/i

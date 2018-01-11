@@ -17,7 +17,7 @@
  * under the License.
  */
 import navigatorMod from '../../src/modules/navigator'
-import weex from '../../src/env/weex'
+import weex from '../../src/weex/instance'
 
 describe('navigator module', () => {
   weex.install(navigatorMod)

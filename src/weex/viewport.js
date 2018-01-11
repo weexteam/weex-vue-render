@@ -66,8 +66,8 @@ function setRootFont (width) {
   const rootFontSize = doc.documentElement.style.fontSize
   if (!rootFontSize) {
     doc.documentElement.style.fontSize = rem + 'px'
-    info.rem = rem
   }
+  info.rem = rem
 }
 
 function setMetaViewport (width) {

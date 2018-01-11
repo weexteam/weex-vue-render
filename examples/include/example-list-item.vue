@@ -1,5 +1,5 @@
 <template>
-  <list-item v-on:click="redirect">
+  <list-item v-on:click.native="redirect">
     <text class="item-txt">{{title}}</text>
   </list-item>
 </template>

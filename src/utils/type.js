@@ -35,3 +35,14 @@ const ARRAY_STRING = '[object Array]'
 export function isArray (arr) {
   return toString.call(arr) === ARRAY_STRING
 }
+
+export function isPrimitive (val) {
+  return typeof value === 'string'
+    || typeof value === 'number'
+    || typeof value === 'symbol'
+    || typeof value === 'boolean'
+}
+
+export function isDef (val) {
+  return val !== undefined && val !== null
+}

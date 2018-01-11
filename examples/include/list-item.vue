@@ -16,7 +16,7 @@
     },
     methods: {
       click: function () {
-        this.$emit('click')
+        // this.$emit('click')
       },
       touchstart: function() {
         // FIXME android touch

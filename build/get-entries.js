@@ -56,7 +56,7 @@ exports.getWebEntries = function (noEntry) {
 
   // debug === true.
   const entryDir = 'web'
-  const entryName = 'debug/tap-bubble-bug'
+  const entryName = 'test/components/render-function'
   const entryPath = path.join(entryDir, entryName)
   fs.outputFileSync(
     resolve(path.join('examples/bundle-entry', entryPath + '.js')),

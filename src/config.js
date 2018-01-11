@@ -83,5 +83,15 @@ export default {
     'longpress',
     'tap'
   ],
+  // these components should not bind events with .native.
+  weexBuiltInComponents: [
+    'div',
+    'container',
+    'text',
+    'image',
+    'img',
+    'cell',
+    'a'
+  ],
   bindingStyleNamesForPx2Rem: allStyles
 }

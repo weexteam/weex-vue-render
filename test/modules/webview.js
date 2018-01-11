@@ -17,7 +17,7 @@
  * under the License.
  */
 import webview from '../../src/modules/webview'
-import weex from '../../src/env/weex'
+import weex from '../../src/weex/instance'
 
 describe('webview module', () => {
   weex.install(webview)

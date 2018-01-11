@@ -19,7 +19,7 @@
 
 function getRefresh (weex) {
   const { extractComponentStyle } = weex
-  const { createEvent } = weex.utils
+  const { dispatchNativeEvent } = weex.utils
 
   return {
     name: 'weex-refresh',
@@ -64,11 +64,13 @@ function getRefresh (weex) {
     methods: {
       pulling (offsetY = 0) {
         this.height = offsetY
-        this.$emit('pullingdown', createEvent(this, 'pullingdown', {
-          dy: offsetY - this.lastDy,
-          pullingDistance: offsetY,
-          viewHeight: this.viewHeight
-        }))
+        if (this.$el) {
+          dispatchNativeEvent(this.$el, 'pullingdown', {
+            dy: offsetY - this.lastDy,
+            pullingDistance: offsetY,
+            viewHeight: this.viewHeight
+          })
+        }
         this.lastDy = offsetY
       },
       pullingDown (offsetY) {
@@ -76,10 +78,12 @@ function getRefresh (weex) {
         this.pulling(offsetY)
       },
       pullingEnd () {
-        this.$el.style.transition = `height .2s`
+        this.$el && (this.$el.style.transition = `height .2s`)
         if (this.height >= this.viewHeight) {
           this.pulling(this.viewHeight)
-          this.$emit('refresh', createEvent(this, 'reresh'))
+          if (this.$el) {
+            dispatchNativeEvent(this.$el, 'refresh')
+          }
         }
         else {
           this.pulling(0)

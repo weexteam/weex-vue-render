@@ -27,29 +27,21 @@ const webEntries = getWebEntries()
 Object.keys(webEntries).forEach(function (name) {
   webEntries[name] = [config.dev.clientPath].concat(webEntries[name])
 })
-const compiler = webpack(merge(webWebpackConfig, {
+const webCompiler = webpack(merge(webWebpackConfig, {
 	entry: webEntries
 }))
 
-webpack(merge(nativeWebpackConfig, {
+const nativeCompiler = webpack(merge(nativeWebpackConfig, {
 	entry: getNativeEntries(),
 	watch: true,
 	watchOptions: {
 		ignored: /node_modules/
 	}
-}), function (err, stats) {
-	if (err) {
-		console.error('[dev-server] error:', err)
-	}
-	if (stats.hasErrors()) {
-		var info = stats.toJson()
-		console.error('[dev-server] error:', stats.errors)
-	}
-})
+}))
 
 const autoOpen = true
 
-const devMiddleware = require('webpack-dev-middleware')(compiler, {
+const devMiddleware = require('webpack-dev-middleware')(webCompiler, {
   // publicPath is required, whereas all other options are optional
 	noInfo: true,
   publicPath: webWebpackConfig.output.publicPath,
@@ -58,7 +50,7 @@ const devMiddleware = require('webpack-dev-middleware')(compiler, {
 	}
 })
 
-const hotMiddleware = require('webpack-hot-middleware')(compiler, {
+const hotMiddleware = require('webpack-hot-middleware')(webCompiler, {
 	path: '/__weex_hmr'
 })
 
@@ -71,7 +63,17 @@ const uri = 'http://' + ip + ':' + port + '/'
 
 console.log('> Starting dev server...')
 devMiddleware.waitUntilValid(() => {
-  console.log('> Listening to ' + uri + '\n')
+	console.log('> Listening to ' + uri + '\n')
+	nativeCompiler.watch(null, function (err, stats) {
+		if (err) {
+			console.error('[dev-server] error:', err)
+		}
+		if (stats.hasErrors()) {
+			var info = stats.toJson()
+			console.error('[dev-server] error:', stats.errors)
+		}
+	})
+
   if (autoOpen) {
     opn(uri)
   }

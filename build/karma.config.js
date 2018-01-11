@@ -64,16 +64,18 @@ module.exports = function (config) {
     browsers: ['PhantomJS'],
     files: [
       resolve('test/components/a.js'),
+      resolve('test/components/cell.js'),
+      resolve('test/components/custom-component.js'),
       resolve('test/components/div.js'),
       resolve('test/components/input.js'),
       resolve('test/components/image.js'),
+      resolve('test/components/render-function.js'),
       resolve('test/components/text.js'),
-      resolve('test/components/cell.js'),
-      resolve('test/components/custom-component.js'),
       resolve('test/core/style.js'),
       '../test/utils/**/*.js',
       '../test/modules/**/*.js'
       ///////////////////////////////////////////
+      // resolve('test/utils/event.js'),
       // '../test/core/*.js',
       // '../test/!(utils|core)/*.js'
       // '../test/components/switch.js',

@@ -611,7 +611,10 @@ export default {
     },
 
     _emitScrollEvent (type, data = {}) {
-      this.$emit(type, weex.utils.createEvent(this.$el, type, data))
+      const el = this.$el
+      if (el) {
+        weex.utils.dispatchNativeEvent(el, type, data)
+      }
     },
 
     _throttleEmitScroll (offset, callback) {
@@ -627,7 +630,7 @@ export default {
         const ratio = this._step === 0
           ? sign * r * (1 - i / cnt)
           : sign * (r + (1 - r) * i / cnt)
-        this._emitScrollEvent('scroll', {
+        this._emitScrollEvent('weex$scroll', {
           offsetXRatio: ratio
         })
         setTimeout(throttledScroll, THROTTLE_SCROLL_TIME)

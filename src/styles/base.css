@@ -97,6 +97,10 @@ div.weex-root {
   background-size: 100% 100%;
 }
 
+.weex-a {
+  text-decoration: none;
+}
+
 .weex-ios-sticky {
   position: -webkit-sticky !important;
   position: sticky !important;

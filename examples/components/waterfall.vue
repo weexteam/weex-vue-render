@@ -420,7 +420,6 @@
       },
 
       setRecyclerPadding: function() {
-        debugger;
         this.padding = (this.padding == 0 ? 12 : 0);
       },
 

@@ -16,8 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import weex from './env'
-import { setVue } from './env'
+import weex from './weex'
+import { setVue } from './weex'
 import { base, event, style, sticky } from './mixins'
 
 /**

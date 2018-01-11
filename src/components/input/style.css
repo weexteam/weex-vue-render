@@ -1,0 +1,6 @@
+.weex-input, .weex-textarea {
+  font-size: 0.426667rem;
+}
+.weex-input:focus, .weex-textarea:focus {
+  outline: none;
+}

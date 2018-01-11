@@ -17,7 +17,7 @@
  * under the License.
  */
 import { throttle, extend } from './func'
-import { createEvent } from './event'
+import { dispatchNativeEvent } from './event'
 import config from '../config'
 
 /**
@@ -178,10 +178,10 @@ export function isElementVisible (el, container, dir, offset) {
 }
 
 // to trigger the appear/disappear event.
-function triggerEvent (elm, evt, dir) {
-  elm.dispatchEvent(createEvent(elm, evt, {
+function triggerAppearEvent (elm, evt, dir) {
+  dispatchNativeEvent(elm, evt, {
     direction: dir
-  }))
+  })
 }
 
 /**
@@ -219,8 +219,8 @@ if (!window._rmInjected) {
   window._rmInjected = true
   const nativeRemove = HTMLElement.prototype.removeChild
   HTMLElement.prototype.removeChild = function (el) {
-    el._visible && triggerEvent(el, 'disappear', null)
-    el._offsetVisible && triggerEvent(el, 'offsetDisappear', null)
+    el._visible && triggerAppearEvent(el, 'disappear', null)
+    el._offsetVisible && triggerAppearEvent(el, 'offsetDisappear', null)
     nativeRemove.apply(this, arguments)
   }
 }
@@ -272,7 +272,7 @@ export function watchAppear (context, fireNow) {
     container.addEventListener('scroll', throttle(scrollHandler, 100, true))
   }
   if (fireNow) {
-    scrollHandler()
+    context.$nextTick(scrollHandler)
   }
 }
 
@@ -302,7 +302,7 @@ export function detectAppear (el, visibleData, dir = null, appearOffset) {
           el._appearedOnce = true
         }
         el._visible = visible
-        triggerEvent(el, evtName, dir)
+        triggerAppearEvent(el, evtName, dir)
       }
     }
   }
@@ -314,7 +314,7 @@ export function detectAppear (el, visibleData, dir = null, appearOffset) {
           el._offsetAppearedOnce = true
         }
         el._offsetVisible = offsetVisible
-        triggerEvent(el, evt[1], dir)
+        triggerAppearEvent(el, evt[1], dir)
       }
     }
   }

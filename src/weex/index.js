@@ -16,24 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import weex from './weex'
-import * as core from '../core'
+import '../styles/reset.css'
+import '../styles/base.css'
 
-import { inputCommon } from '../mixins'
+import 'core-js/fn/array/from'
+import 'core-js/fn/object/assign'
+import 'core-js/fn/object/set-prototype-of'
+import 'core-js/modules/es6.object.to-string'
+import 'core-js/modules/es6.string.iterator'
+import 'core-js/modules/web.dom.iterable'
+import 'core-js/modules/es6.promise'
 
-window.global = window
-window.weex = weex
+import '../lib/gesture'
+import './global'
+import renderFunctionPlugin from './render-function'
 
-weex._styleMap = {}
-
-; ['getComponentInlineStyle',
-  'extractComponentStyle',
-  // 'createEventMap',
-  'trimTextVNodes']
-  .forEach(function (method) {
-    weex[method] = core[method].bind(weex)
-  })
-
-weex.mixins = {
-  inputCommon
+if (global.Vue) {
+  setVue(global.Vue)
 }
+
+export function setVue (vue) {
+  if (!vue) {
+    throw new Error('[Vue Render] Vue not found. Please make sure vue 2.x runtime is imported.')
+  }
+  if (global.weex.__vue__) {
+    return
+  }
+  global.weex.__vue__ = vue
+  weex.install(renderFunctionPlugin)
+  console.log(`[Vue Render] install Vue ${vue.version}.`)
+}
+
+export default weex

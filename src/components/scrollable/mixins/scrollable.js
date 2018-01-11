@@ -36,24 +36,28 @@ function getThrottledScroll (context) {
       const indent = parseInt(context.offsetAccuracy) * scale
       function triggerScroll () {
         const rect = inner.getBoundingClientRect()
-        evt.contentSize = { width: rect.width, height: rect.height }
-        evt.contentOffset = {
-          x: wrapper.scrollLeft,
-          /**
-           * positive direciton for y-axis is down.
-           * so should use negative operation on scrollTop.
-           *
-           *  (0,0)---------------> x
-           *       |
-           *       |
-           *       |
-           *       |
-           *       v y
-           *
-           */
-          y: -wrapper.scrollTop
+        const evtObj = {
+          contentSize: { width: rect.width, height: rect.height },
+          contentOffset: {
+            x: wrapper.scrollLeft,
+            /**
+             * positive direciton for y-axis is down.
+             * so should use negative operation on scrollTop.
+             *
+             *  (0,0)---------------> x
+             *       |
+             *       |
+             *       |
+             *       |
+             *       v y
+             *
+             */
+            y: -wrapper.scrollTop
+          }
         }
-        context.$emit('weex$scroll', evt)
+        if (context.$el) {
+          weex.utils.dispatchNativeEvent(context.$el, 'weex$scroll', evtObj)
+        }
       }
       if (Math.abs(offset - preOffset) >= indent) {
         triggerScroll()
@@ -181,7 +185,10 @@ export default {
         }
         if (this._loadmoreReset && this.reachBottom(this.loadmoreoffset)) {
           this._loadmoreReset = false
-          this.$emit('loadmore', event)
+          const el = this.$el
+          if (el) {
+            weex.utils.dispatchNativeEvent(el, 'loadmore')
+          }
         }
       }
     },

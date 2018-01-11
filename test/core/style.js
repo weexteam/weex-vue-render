@@ -17,7 +17,7 @@
  * under the License.
  */
 import { init } from '../helper'
-import { init as initViewport } from '../../src/env/viewport'
+import { init as initViewport } from '../../src/weex/viewport'
 
 init('core style', (Vue, helper) => {
   const { scale } = initViewport()

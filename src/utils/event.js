@@ -123,12 +123,13 @@ export function createCustomEvent (target, type, props) {
 }
 
 /**
- * dispatch a event on a dom element.
- * @param  {HTMLElement} dom
- * @param  {Event} event
+ * dispatch a event on a HTML element.
+ * @param  {HTMLElement} elm
+ * @param  {Event} type event name.
+ * @param  {Object} data extra data.
  */
-export function dispatchEvent (dom, event) {
-  dom.dispatchEvent(event)
+export function dispatchNativeEvent (elm, type, data) {
+  elm.dispatchEvent(createEvent(elm, type, data))
 }
 
 export function mapFormEvents (context) {
