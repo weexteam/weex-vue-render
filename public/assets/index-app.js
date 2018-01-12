@@ -11,12 +11,15 @@
     var hostname = typeof CURRENT_IP === 'string'
       ? CURRENT_IP
       : location.hostname
+    var pathname = location.pathname
+    pathname = pathname.replace(/\/$|\/[^.]+.html/, '')
     var port = location.port
       ? ':' + location.port
       : ''
     return protocol
       + hostname
       + port
+      + pathname
       + '/'
       + bundle
         .replace('dist/web', 'dist/native')
