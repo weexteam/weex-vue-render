@@ -115,16 +115,12 @@ You should use the previous mentioned plugins in your vue-loader configuration.
 
 | category | rules | 0.12.x | 1.x |
 | --- | ---- | ------ | ----- |
-| **render function** | events binding | none | should add attrs as `data-evt-xxevent`. e.g. If binding a `appear` listener, you should add `attrs: { 'data-evt-appear': '' }` to your render data. |
-|  | `click` event | none | should bind `weex$tap` event on web platform, and `click` event in other platforms. |
-|  | tag name | none | when you use `createElement` to create a `image` element, you should create a `figure` element in web platform. With `text` you should use `p`. |
-|  | attribute `src` for `img` | none | when you `createElement`, use a extra attr `data-img-src` for `figure` element, value of which is exactly the same as value of `src`. |
+| **render function** | create weex component in render function | support | supported in **>=1.0.11** |
+| **event binding** | bind native events for custom component's root element | `@click` | `@click.native` [doc](https://vuejs.org/v2/guide/components.html#Binding-Native-Events-to-Components) |
 | **styles** | style binding | none | better performance for binding object literal like `:style="{width:w,height:h}"` instead of object variable like `:style="someObj"` |
 |  | styles in `animation.transition` | none | should add css prefix manualy if needed. We suggest you use [transition](https://weex-project.io/references/common-style.html#transition-v0-16-0) to implement animation. |
-| **events** | to emit a click event | just $emit a click event | you should $emit `weex$tap` event on web platform. |
-|  | to emit a scroll event | just $emit a scroll event | you should $emit `weex$scroll` event on web platform. |
 | **exclusive styles** | limit | none | wirte them in `<style>` tag for better performance. |
-|  | image attr: 'resize' | none | due to involving style changing, the 'resize' attribute shouldn't be a attribute binding like `:resize="someVar"`, instead you should use static attribute like `resize="cover"`. In other words, it shouldn't be updated. |
+|  | `wx` unit  | support | only in binding style (will fix soon) |
 | **ref** | what `this.$refs.xx` will get | always instance of VueComponent | HTMLElement for div, image and text; VueComponent for other components. |
 
 ## Develop
