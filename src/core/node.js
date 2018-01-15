@@ -20,7 +20,8 @@ import { getTransformer } from 'wxv-transformer'
 import {
   isArray,
   isDef,
-  isPrimitive
+  isPrimitive,
+  dispatchNativeEvent
 } from '../utils'
 import config from '../config'
 
@@ -349,4 +350,15 @@ export function transformData (ctx, data, tag) {
   // on
   transformOn(ctx, data, tag)
   return data
+}
+
+export function mapNativeEvents (ctx, map) {
+  const eventMap = {}
+  for (const origEvent in map) {
+    eventMap[origEvent] = function (evt) {
+      const el = evt.target
+      dispatchNativeEvent(el, map[origEvent])
+    }
+  }
+  return eventMap
 }

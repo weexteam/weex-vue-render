@@ -26,7 +26,7 @@ export default {
   methods: {
     _px2rem (value, rootValue) {
       if (typeof value === 'string') {
-        return (value + '').replace(/[+-]?\d+(?:.\d*)?px/g, function ($0) {
+        return (value + '').replace(/[+-]?\d+(?:.\d*)?[pw]x/gi, function ($0) {
           return weex.utils.px2rem($0, rootValue)
         })
       }

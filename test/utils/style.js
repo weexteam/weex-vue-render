@@ -20,6 +20,7 @@ import {
   supportHairlines,
   supportSticky,
   addTransform,
+  px2rem
 } from '../../src/utils/style'
 import {
   init
@@ -35,16 +36,32 @@ describe('style', function () {
   const {
     scale
   } = init()
-  it('should check if support hairlines', () => {
+
+  it('check if support hairlines', () => {
     const supported = supportHairlines()
     // phantomjs didn't support using 0.5px to paint 1px width border
     expect(typeof supported).to.equal('boolean')
   })
+
   it('should support stick style', () => {
     // phantomjs support stick true
     expect(supportSticky()).to.be.true
   })
+
+  it('px2rem', () => {
+    const str = '75px'
+    const res = px2rem(str, 75)
+    expect(res).to.equal('1rem')
+  })
+
+  it('support wx for px2rem', () => {
+    const str = '100wx'
+    const val = parseFloat(str)
+    const res = px2rem(str, 75)
+    expect(res).to.equal('100px')
+  })
 })
+
 describe('transform', () => {
   describe('should add translate style to the element', () => {
     const style = {

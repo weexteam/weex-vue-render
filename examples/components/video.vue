@@ -1,8 +1,9 @@
 <template>
   <scroller>
-    <video class="video" onpause="onpause" onstart="onstart" onfinish="onfinish" onfail="onfail"
-           src="http://g.tbcdn.cn/ali-wireless-h5/res/0.0.6/toy.mp4"
-           auto-play="true" :playStatus="playStatus">
+    <video class="video" @pause="onpause" @start="onstart" @finish="onfinish" @fail="onfail"
+      controls="true"
+      :src="src"
+      auto-play="true" :playStatus="playStatus">
     </video>
     <div style="flex-direction: row; justify-content: center;">
       <button value="Pause" @click.native="pause"></button>
@@ -21,11 +22,19 @@
 
 <script>
   var modal = weex.requireModule('modal')
+  const src = 'http://a.invalid/video.mp4'
+  const newSrc = 'http://g.tbcdn.cn/ali-wireless-h5/res/0.0.6/toy.mp4'
   module.exports = {
     data: function () {
       return {
+        src,
         playStatus: 'play'
       }
+    },
+    mounted () {
+      setTimeout(() => {
+        this.src = newSrc
+      }, 1000)
     },
     components: {
       button: require('../include/button.vue')
@@ -42,6 +51,10 @@
       onpause: function(e) {
         this.playStatus = e.playStatus
         modal.toast({ 'message': 'video pause' })
+      },
+      onplay: function (e) {
+        this.playStatus = e.playStatus
+        modal.toast({ 'message': 'video play' })
       },
       onstart: function(e) {
         this.playStatus = e.playStatus

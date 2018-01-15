@@ -11,10 +11,54 @@
         style="margin-left:30px;width:210px; margin-top:5px; margin-bottom:5px"
         @click.native="refresh"></button>
     </div>
-    <web class="content" ref="webview" src='http://alibaba.github.io/weex/index.html'
+    <web class="content" ref="webview" :src="src"
       @pagestart="startload" @pagefinish="finishload" @error="failload"></web>
   </div>
 </template>
+
+<script>
+  var webview = weex.requireModule('webview');
+  const src = 'http://invalid.src/for/test'
+  const newSrc = 'http://m.taobao.com'
+  module.exports = {
+    data () {
+      return {
+        src
+      }
+    },
+    components: {
+      button: require('../include/button.vue')
+    },
+    mounted () {
+      setTimeout(() => {
+        this.src = newSrc
+      }, 1000)
+    },
+    methods: {
+      goback: function() {
+        var el = this.$refs.webview
+        webview.goBack(el)
+      },
+      goforward: function() {
+        var el = this.$refs.webview
+        webview.goForward(el)
+      },
+      refresh: function() {
+        var el = this.$refs.webview
+        webview.reload(el)
+      },
+      startload: function(e) {
+        console.log('start load!', e.type, e)
+      },
+      finishload: function(e) {
+        console.log('finish load!', e.type, e)
+      },
+      failload: function(e) {
+        console.log('falied load!', e.type, e)
+      }
+    }
+  }
+</script>
 
 <style scoped>
   .wrapper {
@@ -35,6 +79,7 @@
     margin-bottom: 70;
   }
   .toolbar {
+    z-index: 999;
     flex-direction: row;
     position: fixed;
     bottom: 0;
@@ -43,32 +88,3 @@
     height: 70;
   }
 </style>
-
-<script>
-  var webview = weex.requireModule('webview');
-  module.exports = {
-    components: {
-      button: require('../include/button.vue')
-    },
-    methods: {
-      goback: function() {
-        var el = this.$refs.webview
-        webview.goBack(el)
-      },
-      goforward: function() {
-        var el = this.$refs.webview
-        webview.goForward(el)
-      },
-      refresh: function() {
-        var el = this.$refs.webview
-        webview.reload(el)
-      },
-      startload: function(e) {
-      },
-      finishload: function(e) {
-      },
-      failload: function(e) {
-      }
-    }
-  }
-</script>

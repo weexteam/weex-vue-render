@@ -65,13 +65,9 @@ init('<image> component', (Vue, helper) => {
         naturalWidth: 0,
         naturalHeight: 0
       })
+      expect(refs.bindingSrc.style.backgroundImage).to.match(new RegExp(newSrc))
       callback(done)
     })
-  })
-
-  it('<image> with binding src', () => {
-    const el = refs.bindingSrc
-    expect(el.style.backgroundImage).to.match(new RegExp(newSrc))
   })
 
   it('<image> resize="cover"', () => {

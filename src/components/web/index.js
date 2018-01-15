@@ -16,20 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-const _css = `
-.weex-web {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border: none;
-  box-sizing: border-box;
-}
-`
+import './style.css'
 
 function getWeb (weex) {
-  const { extractComponentStyle, createEventMap } = weex
-  const { createEvent } = weex.utils
+  const { extractComponentStyle } = weex
+  const { dispatchNativeEvent } = weex.utils
 
   return {
     name: 'weex-web',
@@ -56,30 +47,35 @@ function getWeb (weex) {
     },
 
     mounted () {
-      if (this.$el) {
-        this.$emit('pagestart', createEvent(this.$el, 'pagestart', { url: this.src }))
-        this.$el.addEventListener('load', event => {
-          this.$emit('pagefinish', createEvent(this.$el, 'pagefinish', { url: this.src }))
-        })
+      const el = this.$el
+      this._prevSrc = this.src
+      if (el) {
+        dispatchNativeEvent(el, 'pagestart', { url: this.src })
+      }
+    },
+
+    updated () {
+      if (this.src !== this._prevSrc) {
+        this._prevSrc = this.src
+        dispatchNativeEvent(this.$el, 'pagestart', { url: this.src })
       }
     },
 
     render (createElement) {
-      /* istanbul ignore next */
-      // if (process.env.NODE_ENV === 'development') {
-      //   validateStyles('web', this.$vnode.data && this.$vnode.data.staticStyle)
-      // }
       return createElement('iframe', {
         attrs: {
           'weex-type': 'web',
           src: this.src
         },
-        on: createEventMap(this, ['error']),
+        on: {
+          load: event => {
+            dispatchNativeEvent(event.target, 'pagefinish', { url: this.src })
+          }
+        },
         staticClass: 'weex-web weex-el',
         staticStyle: extractComponentStyle(this)
       })
-    },
-    _css
+    }
   }
 }
 
@@ -88,4 +84,3 @@ export default {
     weex.registerComponent('web', getWeb(weex))
   }
 }
-

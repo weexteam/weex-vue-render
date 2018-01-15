@@ -16,24 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import weex from './instance'
-import * as core from '../core'
-
-import { inputCommon } from '../mixins'
-
-window.global = window
-window.weex = weex
-
-weex._styleMap = {}
-
-; ['getComponentInlineStyle',
-  'extractComponentStyle',
-  'mapNativeEvents',
-  'trimTextVNodes']
-  .forEach(function (method) {
-    weex[method] = core[method].bind(weex)
-  })
-
-weex.mixins = {
-  inputCommon
+.weex-web {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: none;
+  box-sizing: border-box;
 }

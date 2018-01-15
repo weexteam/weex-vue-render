@@ -73,9 +73,9 @@ module.exports = function (config) {
       resolve('test/components/text.js'),
       resolve('test/core/style.js'),
       '../test/utils/**/*.js',
-      '../test/modules/**/*.js'
+      '../test/modules/**/*.js',
+      '../test/misc/**/*.js'
       ///////////////////////////////////////////
-      // resolve('test/utils/event.js'),
       // '../test/core/*.js',
       // '../test/!(utils|core)/*.js'
       // '../test/components/switch.js',

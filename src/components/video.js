@@ -18,7 +18,11 @@
 */
 
 function getVideo (weex) {
-  const { extractComponentStyle, createEventMap } = weex
+  const {
+    extractComponentStyle,
+    mapNativeEvents
+  } = weex
+  const { dispatchNativeEvent } = weex.utils
 
   return {
     name: 'weex-video',
@@ -52,7 +56,14 @@ function getVideo (weex) {
     render (createElement) {
       if (this.playStatus === 'play') {
         this.$nextTick(function () {
-          this.$el && this.$el.play()
+          try {
+            this.$el && this.$el.play()
+          }
+          catch (err) {
+            dispatchNativeEvent(this && this.$el, 'error', {
+              message: err.message
+            })
+          }
         })
       }
       else if (this.playStatus === 'pause') {
@@ -70,7 +81,10 @@ function getVideo (weex) {
           controls: this.controls,
           src: this.src
         },
-        on: createEventMap(this, ['start', 'pause', 'finish', 'fail']),
+        on: mapNativeEvents(this, {
+          play: 'start',
+          error: 'fail'
+        }),
         staticClass: 'weex-video weex-el',
         staticStyle: extractComponentStyle(this)
       })
