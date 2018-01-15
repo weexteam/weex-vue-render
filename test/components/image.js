@@ -51,7 +51,7 @@ init('<image> component', (Vue, helper) => {
     expect(el.getAttribute('placeholder')).to.be.equal(src)
   })
 
-  it('load placeholder & update binding src', done => {
+  it('load placeholder', done => {
     const el = refs.staticSrc
     expect(el.getAttribute('data-evt-load')).to.equal('')
     const loadedSpy = helper.getSpy(id, 'loaded')
@@ -65,7 +65,6 @@ init('<image> component', (Vue, helper) => {
         naturalWidth: 0,
         naturalHeight: 0
       })
-      expect(refs.bindingSrc.style.backgroundImage).to.match(new RegExp(newSrc))
       callback(done)
     })
   })
