@@ -19,7 +19,12 @@
 /**
  * @fileOverview utils for tests.
  */
-import { extend } from '../../src/utils'
+import {
+  extend,
+  getRgb
+} from '../../src/utils'
+
+export { getRgb }
 
 export function toArray (list) {
   if (!list) return []
@@ -39,10 +44,17 @@ export function isPhantom () {
   return window.navigator.userAgent.indexOf('PhantomJS') !== -1
 }
 
-export function dispatchEvent (dom, type, opts) {
+export function dispatchEvent (dom, type, opts, callback) {
   const evt = new Event(type, { bubbles: true, cancelable: true })
+  if (typeof opts === 'function') {
+    callback = opts
+    opts = null
+  }
   extend(evt, opts)
   dom.dispatchEvent(evt)
+  if (callback) {
+    setTimeout(callback, 16)
+  }
 }
 
 export function once (dom, type, listener) {
@@ -51,4 +63,11 @@ export function once (dom, type, listener) {
     dom.removeEventListener(type, handler)
   }
   dom.addEventListener(type, handler)
+}
+
+export const rgb = {
+  yellow: { r: 255, g: 255, b: 0 },
+  red: { r: 255, g: 0, b: 0 },
+  blue: { r: 0, g: 0, b: 255 },
+  green: { r: 0, g: 128, b: 0 }
 }

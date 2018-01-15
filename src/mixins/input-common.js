@@ -18,7 +18,7 @@
  */
 
 // input and textare has some common api and event
-import { extend } from '../utils'
+import { extend, dispatchNativeEvent } from '../utils'
 
 const findEnterKeyType = function (key) {
   const keys = ['default', 'go', 'next', 'search', 'send']
@@ -71,20 +71,20 @@ export default {
     // support enter key event
     createKeyboardEvent (events) {
       const customKeyType = this.returnKeyType
-      const self = this
-      if (this._events['return']) {
+      if (customKeyType) {
         const keyboardEvents = {
           'keyup': function (ev) {
             const code = ev.keyCode
-            const key = ev.key
+            let key = ev.key
             if (code === 13) {
               if (!key || key.toLowerCase() === 'tab') {
-                ev.key = 'next'
+                key = 'next'
               }
-              const rightKeyType = findEnterKeyType(customKeyType)
-              ev.returnKeyType = rightKeyType
-              ev.value = ev.target.value
-              self.$el && self.$el.dispatchEvent(ev)
+              dispatchNativeEvent(ev.target, 'return', {
+                key,
+                returnKeyType: findEnterKeyType(customKeyType),
+                value: ev.target.value
+              })
             }
           }
         }

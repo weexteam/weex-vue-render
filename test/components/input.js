@@ -36,14 +36,14 @@ init('components input', (Vue, helper) => {
   })
 
   describe('basic input behaviours', function () {
-    it('should generate input elements.', function () {
+    it('<input> components.', function () {
       expect(refs.txtInput.nodeName.toLowerCase()).to.equal('p')
       expect(refs.txtChange.nodeName.toLowerCase()).to.equal('p')
       expect(refs.inputText.nodeName.toLowerCase()).to.equal('input')
       expect(refs.inputText.type.toLowerCase()).to.equal('text')
     })
 
-    it('should emit input event.', function (done) {
+    it('emit input events.', function (done) {
       const input = refs.inputText
       helper.utils.once(input, 'input', function (e) {
         expect(e.target.value).to.be.equal('abc')
@@ -54,7 +54,7 @@ init('components input', (Vue, helper) => {
       helper.utils.dispatchEvent(input, 'input')
     })
 
-    it ('should emit change event.', function (done) {
+    it('emit change events.', function (done) {
       const input = refs.inputText
       helper.utils.once(input, 'change', function (e) {
         expect(e.target.value).to.be.equal('def')
@@ -63,6 +63,103 @@ init('components input', (Vue, helper) => {
       expect(input.value).to.equal('abc')
       input.value = 'def'
       helper.utils.dispatchEvent(input, 'change')
+    })
+
+    it('v-model for two way data binding', function (done) {
+      const input = refs.vModelInput
+      const text = refs.vModelText
+      const prevValue = 'two way binding value'
+      const newValue = 'v-model works!'
+      expect(input.value).to.equal(prevValue)
+      expect(text.textContent).to.equal(prevValue)
+      input.value = newValue
+      helper.utils.dispatchEvent(input, 'input', function () {
+        expect(text.textContent).to.equal(newValue)
+        done()
+      })
+      expect(input.value).to.equal(newValue)
+    })
+
+    it('return key default', function (done) {
+      const input = refs.inputReturnDefault
+      helper.utils.dispatchEvent(input, 'keyup', {
+        keyCode: 13
+      }, function () {
+        expect(vm.txtReturnType === 'default')
+        done()
+      })
+    })
+
+    it('return key go', function (done) {
+      const input = refs.inputReturnDefault
+      helper.utils.dispatchEvent(input, 'keyup', {
+        keyCode: 13
+      }, function () {
+        expect(vm.txtReturnType === 'go')
+        done()
+      })
+    })
+
+    it('return key next', function (done) {
+      const input = refs.inputReturnDefault
+      helper.utils.dispatchEvent(input, 'keyup', {
+        keyCode: 13
+      }, function () {
+        expect(vm.txtReturnType === 'next')
+        done()
+      })
+    })
+
+    it('return key search', function (done) {
+      const input = refs.inputReturnDefault
+      helper.utils.dispatchEvent(input, 'keyup', {
+        keyCode: 13
+      }, function () {
+        expect(vm.txtReturnType === 'search')
+        done()
+      })
+    })
+
+    it('return key send', function (done) {
+      const input = refs.inputReturnDefault
+      helper.utils.dispatchEvent(input, 'keyup', {
+        keyCode: 13
+      }, function () {
+        expect(vm.txtReturnType === 'send')
+        done()
+      })
+    })
+
+    it('return key done', function (done) {
+      const input = refs.inputReturnDefault
+      helper.utils.dispatchEvent(input, 'keyup', {
+        keyCode: 13
+      }, function () {
+        expect(vm.txtReturnType === 'done')
+        done()
+      })
+    })
+
+    it('method focus', function (done) {
+      const btn = refs.buttonFocus
+      const ipt = refs.input1
+      const focusSpy = sinon.spy(ipt, 'focus')
+      helper.click(btn, function () {
+        expect(focusSpy.callCount).to.equal(1)
+        focusSpy.restore()
+        done()
+      })
+    })
+
+    it('method blur', function (done) {
+      const btn = refs.buttonBlur
+      const ipt = refs.input1
+      const blurSpy = sinon.spy(ipt, 'blur')
+      helper.click(btn, function () {
+        expect(blurSpy.callCount).to.equal(1)
+        blurSpy.restore()
+        done()
+      })
     })
   })
 })

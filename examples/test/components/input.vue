@@ -1,25 +1,83 @@
 <template>
   <div>
-    <div>
-      <text ref="txtInput" style="font-size: 40px">oninput: {{txtInput}}</text>
-      <text ref="txtChange" style="font-size: 40px">onchange: {{txtChange}}</text>
-      <text ref="txtReturnType" style="font-size: 40px">onreturntype: {{txtReturnType}}</text>
-      <text ref="txtSelection" style="font-size: 40px">selection: {{txtSelection}}</text>
+    <div class="info-panel">
+      <text ref="txtInput" class="info">oninput: {{txtInput}}</text>
+      <text ref="txtChange" class="info">onchange: {{txtChange}}</text>
+      <text ref="txtReturnType" class="info">onreturntype: {{txtReturnType}}</text>
+      <text ref="txtSelection" class="info">selection: {{txtSelection}}</text>
+      <text ref="vModelText" class="info">{{vModelValue}}</text>
     </div>
-    <scroller>
-      <input type="text" ref="inputText" class="input-placeholder input" placeholder="Input Text" :autofocus="true" value="" @change="onchange" @input="oninput"/>
-      <input type="text" ref="inputReturnDefault" placeholder="please input" return-key-type="default" class="input" @change="onchange" @return = "onreturn" @input="oninput" />
-      <input type="text" ref="inputReturnGo" placeholder="please input" return-key-type="go" class="input" @change="onchange" @return = "onreturn" @input="oninput" />
-      <input type="text" ref="inputReturnNext" placeholder="please input" return-key-type="next" class="input" @change="onchange" @return = "onreturn" @input="oninput" />
-      <input type="text" ref="inputReturnSearch" placeholder="please input" return-key-type="search" class="input" @change="onchange" @return = "onreturn" @input="oninput" />
-      <input type="text" ref="inputReturnSend" placeholder="please input" return-key-type="send" class="input" @change="onchange" @return = "onreturn" @input="oninput" />
-      <input type="text" ref="inputReturnDone" placeholder="please input" return-key-type="done" class="input" @change="onchange" @return = "onreturn" @input="oninput" />
-      <text class="button" ref="buttonFocus" value="Focus" type="primary" @click="focus"></text>
-      <text class="button" ref="buttonBlur" value="Blur" type="primary" @click="blur"></text>
-      <input type="text" ref="input1" placeholder="Input1" class="input" value=""/>
-      <text class="button" ref="buttonSetRange" value="setRange" type="primary" @click="setRange"></text>
-      <text class="button" ref="buttonGetSelectionRange" value="getSelectionRange" type="primary" @click="getSelectionRange"></text>
-      <input type="text"  ref="inputSelection" placeholder="please input" value="123456789"  class="input" @change="onchange" @return = "onreturn" @input="oninput"/>
+    <scroller class="input-panel">
+      <input type="text" ref="inputText"
+        class="input-placeholder input"
+        placeholder="Input Text"
+        :autofocus="true"
+        value=""
+        @change="onchange"
+        @input="oninput"/>
+      <input type="text" ref="vModelInput"
+        class="input-placeholder input"
+        placeholder="Input Text"
+        :autofocus="true"
+        v-model="vModelValue"/>
+      <input type="text" ref="inputReturnDefault"
+        placeholder="return key default"
+        return-key-type="default"
+        class="input"
+        @return = "onreturn"
+        />
+      <input type="text" ref="inputReturnGo"
+        placeholder="return key go"
+        return-key-type="go"
+        class="input"
+        @return = "onreturn"
+        />
+      <input type="text" ref="inputReturnNext"
+        placeholder="return key next"
+        return-key-type="next"
+        class="input"
+        @return = "onreturn"
+        />
+      <input type="text" ref="inputReturnSearch"
+        placeholder="return key search"
+        return-key-type="search"
+        class="input"
+        @return = "onreturn"
+        />
+      <input type="text" ref="inputReturnSend"
+        placeholder="return key send"
+        return-key-type="send"
+        class="input"
+        @return = "onreturn"
+        />
+      <input type="text" ref="inputReturnDone"
+        placeholder="return key done"
+        return-key-type="done"
+        class="input"
+        @return = "onreturn"
+        />
+      <div class="btn-group">
+        <text class="button" ref="buttonFocus"
+          @click="focus">FOCUS</text>
+        <text class="button" ref="buttonBlur"
+          @click="blur">BLUR</text>
+      </div>
+      <input type="text" ref="input1"
+        placeholder="focus & blur"
+        class="input focus"
+        value=""/>
+      <text class="button" ref="buttonSetRange"
+        value="setRange"
+        @click="setRange"></text>
+      <text class="button" ref="buttonGetSelectionRange"
+        value="getSelectionRange"
+        @click="getSelectionRange"></text>
+      <input type="text"  ref="inputSelection"
+        placeholder="please input"
+        value="123456789"
+        class="input"
+        @return = "onreturn"
+        />
     </scroller>
   </div>
 </template>
@@ -32,6 +90,7 @@
         txtChange: '',
         txtReturnType: '',
         txtSelection:'',
+        vModelValue: 'two way binding value',
         autofocus: false
       }
     },
@@ -62,3 +121,44 @@
     }
   }
 </script>
+
+<style scoped>
+.info-panel {
+  width: 750px;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+}
+.input-panel {
+  width: 750px;
+  padding: 20px;
+}
+.input {
+  font-size: 32px;
+  line-height: 32px;
+  color: #333;
+  height: 40px;
+  margin: 10px;
+  border: 1px solid #999;
+  background-color: #ccc;
+}
+.btn-group {
+  flex-direction: row;
+}
+.button {
+  margin: 10px;
+  padding: 10px;
+  font-size: 32px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #eee;
+  color: #666;
+}
+.info {
+  font-size: 32px;
+  color: #666;
+}
+.focus:focus {
+  background-color: green;
+}
+</style>
+

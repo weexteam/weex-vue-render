@@ -134,10 +134,14 @@ export function dispatchNativeEvent (elm, type, data) {
 
 export function mapFormEvents (context) {
   const eventMap = {}
-  ;['input', 'change', 'focus', 'blur'].forEach(type => {
+  ;['input', 'change', 'focus', 'blur', 'return'].forEach(type => {
     eventMap[type] = event => {
       if (context.$el) {
         event.value = context.$el.value
+        // for the sake of v-model, a input event must be emitted.
+        if (type === 'input') {
+          context.$emit(type, event)
+        }
       }
     }
   })
