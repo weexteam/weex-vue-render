@@ -1,7 +1,7 @@
 {
   "name": "weex-vue-render",
   "description": "Web renderer for weex project written in Vue DSL.",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "license": "Apache-2.0",
   "main": "dist/index.common.js",
   "keywords": [
