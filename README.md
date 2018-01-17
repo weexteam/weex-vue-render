@@ -31,7 +31,9 @@ App.$el = '#root'
 new App()
 ```
 
-> If import the UMD formated bundle to the html, then you dont't have to call `init` manually.
+> The way to require  ES modules and CommonJS modules may have a slice of difference between different versions of Vue and Vue-loader, and this is totally depending on Vue and the loader, so please check out related documents.
+
+> If your import the UMD formated bundle to the html, then you dont't have to call `init` manually.
 
 ```html
 <script>{{Vue runtime}}</script>
