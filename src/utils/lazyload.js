@@ -39,10 +39,10 @@ export function applySrc (item, src, placeholderSrc) {
     delete item._src_loading
   }
 
-  if (window.weex && window.weex._processImgSrc) {
-    src = window.weex._processImgSrc(src, item)
+  if (window._processImgSrc) {
+    src = window._processImgSrc(src, item)
     if (placeholderSrc) {
-      placeholderSrc = window.weex._processImgSrc(placeholderSrc, item)
+      placeholderSrc = window._processImgSrc(placeholderSrc, item)
     }
   }
 
