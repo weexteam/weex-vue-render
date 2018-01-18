@@ -16,14 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-const _css = `
-.weex-textarea {
-  font-size: 0.426667rem
-}
-.weex-textarea:focus {
-  outline: none;
-}
-`
+import './style.css'
 
 function getTextarea (weex) {
   const { extractComponentStyle } = weex
@@ -74,8 +67,7 @@ function getTextarea (weex) {
         staticClass: 'weex-textarea weex-el',
         staticStyle: extractComponentStyle(this)
       })
-    },
-    _css
+    }
   }
 }
 
