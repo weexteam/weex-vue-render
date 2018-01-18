@@ -46,6 +46,7 @@ const helper = {
    *    'helper.bundles.components.div'.
    * @param {Object} options
    *  - spys: a array of spy function names.
+   *  - plugins: a array of plugins.
    * @return {Vue} vue instance.
    */
   createVm (id, options = {}) {
@@ -56,6 +57,13 @@ const helper = {
     if (data) {
       helper.clear(id)
     }
+
+    const { spys, plugins } = options
+    // install plugins.
+    if (plugins) {
+      plugins.forEach(helper.install)
+    }
+
     const ct = document.createElement('div')
     document.body.appendChild(ct)
     const Vue = weex.__vue__
@@ -69,7 +77,6 @@ const helper = {
     const root = vm.$el
     root.id = id
     root.style.height = '100%'
-
     this.data[id] = {
       vm,
       root,
@@ -77,7 +84,6 @@ const helper = {
       done: {},
     }
 
-    const { spys } = options
     // gen spys
     if (spys) {
       this.genSpys(id, spys)
@@ -150,7 +156,7 @@ const helper = {
     const tap = new Event('weex$tap', { bubbles: true, cancellable: true })
     el.dispatchEvent(tap)
     setTimeout(function () {
-      el.click()
+      el.click && el.click()
       setTimeout(function () {
         cb && cb()
       }, 25)

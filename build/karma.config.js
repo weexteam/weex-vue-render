@@ -70,11 +70,12 @@ module.exports = function (config) {
       resolve('test/components/input.js'),
       resolve('test/components/image.js'),
       resolve('test/components/render-function.js'),
+      resolve('test/components/switch.js'),
       resolve('test/components/text.js'),
       resolve('test/core/style.js'),
-      '../test/utils/**/*.js',
-      '../test/modules/**/*.js',
-      '../test/misc/**/*.js'
+      '../test/utils/*.js',
+      '../test/modules/*.js',
+      '../test/misc/*.js'
       ///////////////////////////////////////////
       // '../test/core/*.js',
       // '../test/!(utils|core)/*.js'
@@ -102,8 +103,6 @@ module.exports = function (config) {
     browserDisconnectTimeout: 10000,
     preprocessors: {
       '../test/**/*.js': ['rollup', 'coverage']
-      // '../src/**/*.js': ['rollup', 'coverage']
-      // '../test/**/!(components|examples|core)/!(component).js': ['rollup', 'coverage']
     },
     rollupPreprocessor: rollupConfig,
 

@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import './style.css'
 
 function getSwitch (weex) {
   const { extractComponentStyle } = weex
-  const { createEvent } = weex.utils
+  const { dispatchNativeEvent } = weex.utils
 
   return {
     name: 'weex-switch',
@@ -41,7 +42,7 @@ function getSwitch (weex) {
     },
     computed: {
       wrapperClass () {
-        const classArray = ['weex-switch']
+        const classArray = ['weex-el', 'weex-switch']
         this.isChecked && classArray.push('weex-switch-checked')
         this.isDisabled && classArray.push('weex-switch-disabled')
         return classArray.join(' ')
@@ -52,7 +53,7 @@ function getSwitch (weex) {
         // TODO: handle the events
         if (!this.isDisabled) {
           this.isChecked = !this.isChecked
-          this.$emit('change', createEvent(this, 'change', { value: this.isChecked }))
+          dispatchNativeEvent(this.$el, 'change', { value: this.isChecked })
         }
       }
     },
@@ -64,8 +65,8 @@ function getSwitch (weex) {
           const handler = evt => {
             this.toggle()
           }
-          this._removeClickHandler = el.removeEventListener.bind(el, 'click', handler)
-          el.addEventListener('click', handler)
+          this._removeClickHandler = el.removeEventListener.bind(el, 'weex$tap', handler)
+          el.addEventListener('weex$tap', handler)
         }
       }
     },
@@ -79,10 +80,6 @@ function getSwitch (weex) {
     },
 
     render (createElement) {
-      /* istanbul ignore next */
-      // if (process.env.NODE_ENV === 'development') {
-      //   validateStyles('switch', this.$vnode.data && this.$vnode.data.staticStyle)
-      // }
       return createElement('span', {
         attrs: { 'weex-type': 'switch' },
         staticClass: this.wrapperClass,

@@ -17,16 +17,19 @@
  * under the License.
  */
 import { init } from '../helper'
+import input from '../../src/components/input'
 
 init('components input', (Vue, helper) => {
 
   const id = 'components.input'
   const spys = ['input', 'change']
   let vm, refs
+  const { toArray } = helper.utils
 
   before(() => {
     vm = helper.createVm(id, {
-      spys
+      spys,
+      plugins: [input]
     })
     refs = vm.$refs
   })
@@ -37,14 +40,16 @@ init('components input', (Vue, helper) => {
 
   describe('basic input behaviours', function () {
     it('<input> components.', function () {
+      debugger
       expect(refs.txtInput.nodeName.toLowerCase()).to.equal('p')
       expect(refs.txtChange.nodeName.toLowerCase()).to.equal('p')
-      expect(refs.inputText.nodeName.toLowerCase()).to.equal('input')
-      expect(refs.inputText.type.toLowerCase()).to.equal('text')
+      expect(refs.inputText.$el.nodeName.toLowerCase()).to.equal('input')
+      expect(toArray(refs.inputText.$el.classList)).include.members(['weex-input', 'weex-el'])
+      expect(refs.inputText.$el.type.toLowerCase()).to.equal('text')
     })
 
     it('emit input events.', function (done) {
-      const input = refs.inputText
+      const input = refs.inputText.$el
       helper.utils.once(input, 'input', function (e) {
         expect(e.target.value).to.be.equal('abc')
         done()
@@ -55,7 +60,7 @@ init('components input', (Vue, helper) => {
     })
 
     it('emit change events.', function (done) {
-      const input = refs.inputText
+      const input = refs.inputText.$el
       helper.utils.once(input, 'change', function (e) {
         expect(e.target.value).to.be.equal('def')
         done()
@@ -66,7 +71,7 @@ init('components input', (Vue, helper) => {
     })
 
     it('v-model for two way data binding', function (done) {
-      const input = refs.vModelInput
+      const input = refs.vModelInput.$el
       const text = refs.vModelText
       const prevValue = 'two way binding value'
       const newValue = 'v-model works!'
@@ -81,7 +86,7 @@ init('components input', (Vue, helper) => {
     })
 
     it('return key default', function (done) {
-      const input = refs.inputReturnDefault
+      const input = refs.inputReturnDefault.$el
       helper.utils.dispatchEvent(input, 'keyup', {
         keyCode: 13
       }, function () {
@@ -91,7 +96,7 @@ init('components input', (Vue, helper) => {
     })
 
     it('return key go', function (done) {
-      const input = refs.inputReturnDefault
+      const input = refs.inputReturnDefault.$el
       helper.utils.dispatchEvent(input, 'keyup', {
         keyCode: 13
       }, function () {
@@ -101,7 +106,7 @@ init('components input', (Vue, helper) => {
     })
 
     it('return key next', function (done) {
-      const input = refs.inputReturnDefault
+      const input = refs.inputReturnDefault.$el
       helper.utils.dispatchEvent(input, 'keyup', {
         keyCode: 13
       }, function () {
@@ -111,7 +116,7 @@ init('components input', (Vue, helper) => {
     })
 
     it('return key search', function (done) {
-      const input = refs.inputReturnDefault
+      const input = refs.inputReturnDefault.$el
       helper.utils.dispatchEvent(input, 'keyup', {
         keyCode: 13
       }, function () {
@@ -121,7 +126,7 @@ init('components input', (Vue, helper) => {
     })
 
     it('return key send', function (done) {
-      const input = refs.inputReturnDefault
+      const input = refs.inputReturnDefault.$el
       helper.utils.dispatchEvent(input, 'keyup', {
         keyCode: 13
       }, function () {
@@ -131,7 +136,7 @@ init('components input', (Vue, helper) => {
     })
 
     it('return key done', function (done) {
-      const input = refs.inputReturnDefault
+      const input = refs.inputReturnDefault.$el
       helper.utils.dispatchEvent(input, 'keyup', {
         keyCode: 13
       }, function () {

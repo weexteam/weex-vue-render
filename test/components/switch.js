@@ -20,47 +20,52 @@ import { init } from '../helper'
 import _switch from '../../src/components/switch'
 
 init('<switch> component', (Vue, helper) => {
-  const { utils, compile } = helper
+  const id = 'components.switch'
+  const spys = ['change']
+  const { utils, click } = helper
+  const { toArray } = utils
+  let vm, refs
 
   before(() => {
-    helper.install(switch)
+    vm = helper.createVm(id, {
+      spys,
+      plugins: [_switch]
+    })
+    refs = vm.$refs
+  })
+
+  after(() => {
+    helper.clear(id)
   })
 
   it('simple <switch> component', () => {
-    const vm = compile(`<switch></switch>`)
-    expect(vm.$el.tagName.toLowerCase()).to.be.equal('span')
-    expect(utils.toArray(vm.$el.classList)).to.include('weex-switch')
+    const el = refs.simple.$el
+    expect(el.tagName.toLowerCase()).to.be.equal('span')
+    expect(utils.toArray(el.classList)).to.include.members(
+      ['weex-switch', 'weex-el']
+    )
   })
 
   it('disabled <switch>', () => {
-    const vmA = compile(`<switch disabled="true"></switch>`)
-    const vmB = compile(`<switch disabled></switch>`)
-    const vmC = compile(`<switch disabled="disabled"></switch>`)
-    expect(vmA.$el.className).to.match(/weex\-switch\-disabled/)
-    expect(vmB.$el.className).to.match(/weex\-switch\-disabled/)
-    expect(vmC.$el.className).to.match(/weex\-switch\-disabled/)
-  })
-
-  it('enabled <switch>', () => {
-    const vmA = compile(`<switch></switch>`)
-    const vmB = compile(`<switch disabled="false"></switch>`)
-
-    expect(vmA.$el.className).to.match(/weex-switch/)
-    expect(vmB.$el.className).to.match(/weex-switch/)
+    const disabled = refs.disabled.$el
+    const disabledChecked = refs.disabledChecked.$el
+    expect(toArray(disabled.classList)).to.include.members(
+      ['weex-switch-disabled', 'weex-switch', 'weex-el']
+    )
+    expect(toArray(disabledChecked.classList)).to.include.members(
+      ['weex-switch-disabled', 'weex-switch', 'weex-el', 'weex-switch-checked']
+    )
   })
 
   it('checked <switch>', () => {
-    const vmA = compile(`<switch checked="true"></switch>`)
-    const vmB = compile(`<switch checked></switch>`)
-    const vmC = compile(`<switch checked="checked"></switch>`)
-
-    expect(vmA.$el.className).to.match(/weex\-switch\-checked/)
-    expect(vmB.$el.className).to.match(/weex\-switch\-checked/)
-    expect(vmC.$el.className).to.match(/weex\-switch\-checked/)
+    const checked = refs.checked.$el
+    expect(toArray(checked.classList)).to.include.members(
+      ['weex-switch-checked', 'weex-switch', 'weex-el']
+    )
   })
 
   it('toggle <switch>', () => {
-    const vm = compile(`<switch ref="switch"></switch>`).$refs.switch
+    const vm = refs.simple
     expect(vm.isChecked).to.not.be.true
     vm.toggle()
     expect(vm.isChecked).to.be.true
@@ -68,30 +73,31 @@ init('<switch> component', (Vue, helper) => {
     expect(vm.isChecked).to.not.be.true
   })
 
-  it('toggle & disabled <switch>', () => {
-    const vm = compile(`<switch ref="switch"></switch>`).$refs.switch
+  it('toggle disabled <switch>', () => {
+    const vm = refs.disabled
     vm.isDisabled = true
-
     expect(vm.isChecked).to.not.be.true
     vm.toggle()
     expect(vm.isChecked).to.not.be.true
   })
 
-  it('unchecked <switch>', () => {
-    const vmA = compile(`<switch></switch>`)
-    const vmB = compile(`<switch checked="false"></switch>`)
-
-    expect(vmA.$el.className).to.match(/weex-switch/)
-    expect(vmB.$el.className).to.match(/weex-switch/)
-  })
-
-  it('disabled & checked <switch>', () => {
-    const vmA = compile(`<switch disabled checked></switch>`)
-    const vmB = compile(`<switch disabled="disabled" checked="checked"></switch>`)
-
-    expect(vmA.$el.className).to.match(/weex\-switch\-checked/)
-    expect(vmA.$el.className).to.match(/weex\-switch\-disabled/)
-    expect(vmB.$el.className).to.match(/weex\-switch\-checked/)
-    expect(vmB.$el.className).to.match(/weex\-switch\-disabled/)
+  it('emit change events.', (done) => {
+    const change = refs.change.$el
+    const info = refs.changeInfo
+    const spy = helper.getSpy(id, 'change')
+    expect(spy.callCount).to.equal(0)
+    expect(info.textContent).to.equal('false')
+    click(change, function () {
+      expect(spy.callCount).to.equal(1)
+      expect(spy.args[0][0]).to.equal(true)
+      expect(info.textContent).to.equal('true')
+      spy.reset()
+      click(change, function () {
+        expect(spy.callCount).to.equal(1)
+        expect(spy.args[0][0]).to.equal(false)
+        expect(info.textContent).to.equal('false')
+        done()
+      })
+    })
   })
 })
