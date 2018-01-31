@@ -23,41 +23,77 @@ function getWeb (weex) {
   const { dispatchNativeEvent } = weex.utils
 
   return {
+    data () {
+      return {
+        currentSrc: ''
+      }
+    },
     name: 'weex-web',
     props: {
       src: String
     },
+    watch: {
+      src (newVal) {
+        this.currentSrc = newVal
+      }
+    },
     methods: {
-      // TODO: check cross-origin
       goBack () {
-        if (this.$el) {
-          this.$el.contentWindow.history.back()
+        const el = this.$el
+        if (el) {
+          const win = el.contentWindow
+          try {
+            win.history.back()
+            this.currentSrc = win.location.href
+          }
+          catch (err) {
+            dispatchNativeEvent(el, 'error', err)
+          }
         }
       },
       goForward () {
-        if (this.$el) {
-          this.$el.contentWindow.history.forward()
+        const el = this.$el
+        if (el) {
+          const win = el.contentWindow
+          try {
+            win.history.forward()
+            this.currentSrc = win.location.href
+          }
+          catch (err) {
+            dispatchNativeEvent(el, 'error', err)
+          }
         }
       },
       reload () {
-        if (this.$el) {
-          this.$el.contentWindow.history.reload()
+        const el = this.$el
+        if (el) {
+          try {
+            el.contentWindow.location.reload()
+            dispatchNativeEvent(el, 'pagestart', { url: this.currentSrc })
+          }
+          catch (err) {
+            dispatchNativeEvent(el, 'error', err)
+          }
         }
       }
+    },
+
+    created () {
+      this.currentSrc = this.src
     },
 
     mounted () {
       const el = this.$el
-      this._prevSrc = this.src
+      this._prevSrc = this.currentSrc
       if (el) {
-        dispatchNativeEvent(el, 'pagestart', { url: this.src })
+        dispatchNativeEvent(el, 'pagestart', { url: this.currentSrc })
       }
     },
 
     updated () {
-      if (this.src !== this._prevSrc) {
-        this._prevSrc = this.src
-        dispatchNativeEvent(this.$el, 'pagestart', { url: this.src })
+      if (this.currentSrc !== this._prevSrc) {
+        this._prevSrc = this.currentSrc
+        dispatchNativeEvent(this.$el, 'pagestart', { url: this.currentSrc })
       }
     },
 
@@ -65,11 +101,25 @@ function getWeb (weex) {
       return createElement('iframe', {
         attrs: {
           'weex-type': 'web',
-          src: this.src
+          src: this.currentSrc
         },
         on: {
           load: event => {
-            dispatchNativeEvent(event.target, 'pagefinish', { url: this.src })
+            this.$nextTick(function () {
+              const el = this.$el
+              try {
+                const html = el.contentWindow.document.documentElement
+                if (html) {
+                  dispatchNativeEvent(el, 'pagefinish', { url: this.currentSrc })
+                }
+                else {
+                  dispatchNativeEvent(el, 'error', new Error('[vue-render]:found no page content.'))
+                }
+              }
+              catch (err) {
+                dispatchNativeEvent(el, 'error', err)
+              }
+            })
           }
         },
         staticClass: 'weex-web weex-el',

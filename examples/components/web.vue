@@ -12,7 +12,9 @@
         @click.native="refresh"></button>
     </div>
     <web class="content" ref="webview" :src="src"
-      @pagestart="startload" @pagefinish="finishload" @error="failload"></web>
+      @pagestart="startload"
+      @pagefinish="finishload"
+      @error="failload"></web>
   </div>
 </template>
 
@@ -20,6 +22,7 @@
   var webview = weex.requireModule('webview');
   const src = 'http://invalid.src/for/test'
   const newSrc = 'http://m.taobao.com'
+  // const newSrc = window.location.href.replace(/\?[^?]*$/, '')  // for test.
   module.exports = {
     data () {
       return {
