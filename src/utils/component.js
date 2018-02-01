@@ -209,7 +209,7 @@ function getAppearOffset (el) {
 
 function updateWatchAppearList (container) {
   container._watchAppearList = Array.prototype.slice.call(
-    document.querySelectorAll('[weex-appear]'))
+    container.querySelectorAll('[weex-appear]'))
 }
 
 /**
