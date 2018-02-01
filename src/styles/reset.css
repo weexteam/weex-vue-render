@@ -22,9 +22,13 @@
   color: initial;
   cursor: initial;
   direction: initial;
-  font: initial;
+  /* In chrome, there's a chance that user set the miximum font-size to 
+  a abnormal smaller size. But actually the smaller size is never working
+  if this font / font-size default value is set to initial. Perhaps a bug
+  for chrome. */
+  /* font: initial; */
+  /* font-size: initial; */
   font-family: initial;
-  font-size: initial;
   font-style: initial;
   font-variant: initial;
   font-weight: initial;
