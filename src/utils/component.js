@@ -287,8 +287,8 @@ export function detectAppear (el, visibleData, dir = null, appearOffset) {
   const [visible, offsetVisible] = visibleData
   /**
    * No matter it's binding appear/disappear or both of them. Always
-   * should test it's visibility and change the context/._visible.
-   * If neithor of them was bound, then just ignore it.
+   * should test it's visibility and change the el._visible.
+   * If neigher has been bound, then ignore it.
    */
   /**
    * if the component hasn't appeared for once yet, then it shouldn't trigger
@@ -296,24 +296,24 @@ export function detectAppear (el, visibleData, dir = null, appearOffset) {
    */
   if (el._appearedOnce || visible) {
     if (el._visible !== visible) {
+      el._visible = visible
+      if (visible && !el._appearedOnce) {
+        el._appearedOnce = true
+      }
       const evtName = visible ? 'appear' : 'disappear'
       if (el.getAttribute(`data-evt-${evtName}`) === '') {
-        if (!el._appearedOnce) {
-          el._appearedOnce = true
-        }
-        el._visible = visible
         triggerAppearEvent(el, evtName, dir)
       }
     }
   }
   if (el._offsetAppearedOnce || offsetVisible) {
     if (el._offsetVisible !== offsetVisible) {
+      el._offsetVisible = offsetVisible
+      if (offsetVisible && !el._offsetAppearedOnce) {
+        el._offsetAppearedOnce = true
+      }
       const evt = offsetVisible ? ['offset-appear', 'offsetAppear'] : ['offset-disappear', 'offsetDisappear']
       if (el.getAttribute(`data-evt-${evt[0]}`) === '') {
-        if (!el._offsetAppearedOnce) {
-          el._offsetAppearedOnce = true
-        }
-        el._offsetVisible = offsetVisible
         triggerAppearEvent(el, evt[1], dir)
       }
     }
