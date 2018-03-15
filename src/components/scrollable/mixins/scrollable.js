@@ -94,6 +94,14 @@ export default {
     this._loadmoreReset = true
   },
 
+  mounted () {
+    this.reloadStickyChildren()
+  },
+
+  updated () {
+    this.reloadStickyChildren()
+  },
+
   methods: {
     updateLayout () {
       const wrapper = this.$refs.wrapper
@@ -137,16 +145,15 @@ export default {
        * current browser support 'sticky' or '-webkit-sticky', so there's no need
        * to do further more.
        */
-      if (weex.utils.supportSticky()) {
-        return
-      }
+      const stickyChildren = this._stickyChildren
+      const len = stickyChildren && stickyChildren.length || 0
+      if (len <= 0) { return }
+
+      const origSticky = weex.utils.supportSticky()
       // current only support list and vertical scroller.
       if (this.scrollDirection === 'horizontal') {
         return
       }
-      const stickyChildren = this._stickyChildren
-      const len = stickyChildren && stickyChildren.length || 0
-      if (len <= 0) { return }
 
       const container = this.$el
       if (!container) { return }
@@ -155,12 +162,54 @@ export default {
       let stickyChild
       for (let i = 0; i < len; i++) {
         stickyChild = stickyChildren[i]
-        if (stickyChild._initOffsetTop < scrollTop) {
-          stickyChild._addSticky()
+        if (origSticky) {
+          this.addSticky(stickyChild, origSticky)
+        }
+        else if (stickyChild._initOffsetTop < scrollTop) {
+          this.addSticky(stickyChild)
         }
         else {
-          stickyChild._removeSticky()
+          this.removeSticky(stickyChild)
         }
+      }
+    },
+
+    addSticky (el, supportSticky) {
+      if (supportSticky) {
+        el.classList.add('weex-ios-sticky')
+      }
+      else {
+        if (el._sticky === true) return
+        el._sticky = true
+        if (!el._placeholder) {
+          el._placeholder = el.cloneNode(true)
+        }
+        el.parentNode.insertBefore(el._placeholder, el)
+        el.style.width = window.getComputedStyle(el).width
+        el.classList.add('weex-sticky')
+      }
+    },
+
+    removeSticky (el) {
+      if (
+        typeof el._sticky === 'undefined'
+        || el._sticky === false
+      ) {
+        return
+      }
+      el._sticky = false
+      el.parentNode.removeChild(el._placeholder)
+      el.classList.remove('weex-sticky')
+    },
+
+    reloadStickyChildren () {
+      const container = this.$el
+      if (!container) return
+      const children = container.querySelectorAll('[sticky]')
+      this._stickyChildren = children
+      for (let i = 0, l = children.length; i < l; i++) {
+        const child = children[i]
+        child._initOffsetTop = child.offsetTop
       }
     },
 

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { scrollable, list as listMixin } from './mixins'
+import { scrollable } from './mixins'
 
 function getList (weex) {
   const {
@@ -25,7 +25,7 @@ function getList (weex) {
 
   return {
     name: 'weex-list',
-    mixins: [scrollable, listMixin],
+    mixins: [scrollable],
     computed: {
       wrapperClass () {
         const classArray = ['weex-list', 'weex-list-wrapper', 'weex-ct']
@@ -63,7 +63,7 @@ function getList (weex) {
         attrs: { 'weex-type': 'list' },
         staticClass: this.wrapperClass,
         on: {
-          scroll: this.handleListScroll,
+          scroll: this.handleScroll,
           touchstart: this.handleTouchStart,
           touchmove: this.handleTouchMove,
           touchend: this.handleTouchEnd

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { scrollable, list as listMixin } from './mixins'
+import { scrollable } from './mixins'
 
 function getScroller (weex) {
   const {
@@ -26,7 +26,7 @@ function getScroller (weex) {
 
   return {
     name: 'weex-scroller',
-    mixins: [scrollable, listMixin],
+    mixins: [scrollable],
     props: {
       scrollDirection: {
         type: [String],

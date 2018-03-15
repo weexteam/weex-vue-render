@@ -90,7 +90,7 @@ function getWaterfall (weex) {
 
     methods: {
       _createChildren (h, rootStyle) {
-        const slots = this.$slots.default || []
+        const slots = (this.$slots.default || []).slice()
         this._headers = []
         this._footers = []
         this._others = []
@@ -110,11 +110,13 @@ function getWaterfall (weex) {
           }
           if (tag === 'header') {
             this._headers.push(vnode)
+            slots[i] = null // should not included in footer.
           }
         }
 
         for (let i = len - 1; i >= 0; i--) {
           const vnode = slots[i]
+          if (!vnode) { continue }  // already taken by header.
           const tag =
             vnode.componentOptions
             && vnode.componentOptions.tag
@@ -131,6 +133,7 @@ function getWaterfall (weex) {
         }
 
         this._cells = slots.filter(vnode => {
+          if (!vnode) return false
           const cmpOpts = vnode.componentOptions
           if (!vnode.tag && !cmpOpts) return false
           const tag = cmpOpts && cmpOpts.tag || vnode.tag
