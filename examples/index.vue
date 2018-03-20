@@ -31,6 +31,7 @@
           {name: root + '/components/web', title: 'Web'},
           {name: root + '/components/navigator', title: 'Navigator'},
           {name: root + '/components/tabbar', title: 'Tabbar'},
+          {name: root + '/components/switch', title: 'Switch'},
 
           // module
           {name: root + '/modules/instance-api', title: 'Instance API'},
