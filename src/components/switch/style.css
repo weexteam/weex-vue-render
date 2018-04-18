@@ -41,8 +41,7 @@
 }
 
 .weex-switch-checked.weex-switch-disabled {
-  background-color: #A0CCA0;
-  box-shadow: #A0CCA0 0 0 0 0.533333rem inset;
+  opacity: 0.3
 }
 
 .weex-switch-disabled {
