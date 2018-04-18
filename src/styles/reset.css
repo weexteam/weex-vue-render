@@ -26,8 +26,8 @@
   a abnormal smaller size. But actually the smaller size is never working
   if this font / font-size default value is set to initial. Perhaps a bug
   for chrome. */
-  /* font: initial; */
-  /* font-size: initial; */
+  font: initial;
+  font-size: initial;
   font-family: initial;
   font-style: initial;
   font-variant: initial;
