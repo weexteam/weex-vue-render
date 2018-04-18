@@ -32,7 +32,13 @@ function getSwitch (weex) {
       disabled: {
         type: [Boolean, String],
         default: false
-      }
+      },
+      // Border color  when the switch is turned off
+      tintColor: String,
+      // Background color when the switch is turned on.
+      onTintColor: String,
+      // Color of the foreground switch grip.
+      thumbTintColor: String
     },
     data () {
       return {
@@ -46,6 +52,43 @@ function getSwitch (weex) {
         this.isChecked && classArray.push('weex-switch-checked')
         this.isDisabled && classArray.push('weex-switch-disabled')
         return classArray.join(' ')
+      },
+      mergeStyle () {
+        const style = extractComponentStyle(this)
+        const { tintColor, onTintColor, isChecked, isDisabled } = this
+
+        if (!isChecked && tintColor) {
+          Object.assign(style, {
+            borderColor: tintColor,
+            boxShadow: `${tintColor} 0 0 0 0 inset`
+          })
+        }
+
+        if (isChecked && onTintColor) {
+          Object.assign(style, {
+            backgroundColor: onTintColor,
+            color: onTintColor,
+            borderColor: onTintColor,
+            boxShadow: `${onTintColor} 0 0 0 0.533333rem inset`
+          })
+        }
+
+        isDisabled && Object.assign(style, {
+          opacity: 0.3
+        })
+
+        return style
+      },
+      smallStyle () {
+        const { thumbTintColor } = this
+        let smallStyle = {}
+
+        if (thumbTintColor) {
+          smallStyle = {
+            background: thumbTintColor
+          }
+        }
+        return smallStyle
       }
     },
     methods: {
@@ -83,8 +126,11 @@ function getSwitch (weex) {
       return createElement('span', {
         attrs: { 'weex-type': 'switch' },
         staticClass: this.wrapperClass,
-        staticStyle: extractComponentStyle(this)
-      }, [createElement('small', { staticClass: 'weex-switch-inner' })])
+        staticStyle: this.mergeStyle
+      }, [createElement('small', {
+        staticClass: 'weex-switch-inner',
+        staticStyle: this.smallStyle
+      })])
     }
   }
 }
