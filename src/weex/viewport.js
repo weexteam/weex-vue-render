@@ -51,6 +51,7 @@ let screenHeight = 0
 const info = {
   dpr,
   scale: 0,
+  rootValue: 0,
   rem: 0,
   deviceWidth: 0,
   deviceHeight: 0
@@ -152,6 +153,7 @@ export function init (viewportWidth = width) {
 
     extend(info, {
       scale,
+      rootValue: viewportWidth / 10,
       deviceWidth: screenWidth * dpr,
       deviceHeight: screenHeight * dpr
     })

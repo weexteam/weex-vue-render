@@ -83,7 +83,7 @@ function transitionOnce (vnode, config, callback) {
   }
   nextFrame(() => {
     dom.style.cssText
-      += toCSSText(styleObject2rem(config.styles, 75) || {})
+      += toCSSText(styleObject2rem(config.styles, weex.config.env.rootValue) || {})
   })
 }
 
