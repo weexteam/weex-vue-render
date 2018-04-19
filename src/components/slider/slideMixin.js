@@ -46,6 +46,32 @@ export default {
         }
       }
     }
+
+    const frameCount = this.frameCount
+    if (!this._preFrameCount) {
+      this._preFrameCount = frameCount
+    }
+    else if (this._preFrameCount !== frameCount) {
+      this._resetNodes()
+      this._preFrameCount = frameCount
+      const resetBlankFrame = () => {
+        if (this.currentIndex >= frameCount) {
+          // reset blank page.
+          this._stopAutoPlay()
+          this._slideTo(0)
+        }
+      }
+      if (this._sliding) {
+        // If it's sliding, then the currentIndex is the last frame. The actual currentIndex
+        // should be the next index.
+        // That is to say, this updating happens Between _parepareNodes and _rearrangeNodes,
+        // and the sliding is not yet finished, and the state is not updated yet.
+        setTimeout(resetBlankFrame, TRANSITION_TIME + NEIGHBOR_SCALE_TIME)
+      }
+      else {
+        resetBlankFrame()
+      }
+    }
     weex.utils.fireLazyload(this.$el, true)
     if (this._preIndex !== this.currentIndex) {
       this._slideTo(this.currentIndex)
@@ -156,7 +182,6 @@ export default {
           return
         }
       }
-
       if (!this._preIndex && this._preIndex !== 0) {
         if (this._showNodes && this._showNodes[0]) {
           this._preIndex = this._showNodes[0].index
@@ -282,6 +307,7 @@ export default {
         node._showIndex = 0
         return
       }
+
       const showCount = this._showCount = Math.abs(step) + 3
       this._showStartIdx = step <= 0 ? -1 : 2 - showCount
       this._showEndIdx = step <= 0 ? showCount - 2 : 1
@@ -289,16 +315,36 @@ export default {
       this._positionNodes(this._showStartIdx, this._showEndIdx, step)
     },
 
+    _clearClones () {
+      // clear all clones.
+      Object.keys(this._clones).forEach(key => {
+        this._clones[key].forEach(cloneNode => {
+          cloneNode.parentNode.removeChild(cloneNode)
+        })
+        this._clones[key] = []
+      })
+    },
+
+    // reset nodes' index and _inShow state. But leave the styles
+    // as they are to prevent dom rerendering.
+    _resetNodes () {
+      this._clearClones()
+      // reset status.
+      this._cells.forEach((cell, idx) => {
+        const elm = cell.elm
+        elm.index = idx
+        elm._inShow = false
+      })
+    },
+
     _initNodes () {
-      const total = this.frameCount
-      const cells = this._cells
-      for (let i = 0; i < total; i++) {
-        const node = cells[i].elm
-        node.index = i
+      this._cells.forEach((cell, idx) => {
+        const node = cell.elm
+        node.index = idx
         node._inShow = false
         node.style.zIndex = 0
         node.style.opacity = 0
-      }
+      })
     },
 
     _positionNodes (begin, end, step, anim) {
@@ -319,11 +365,11 @@ export default {
      */
     _positionNode (node, index) {
       const holder = this._showNodes[index]
-      if (node._inShow && holder !== node) {
-        if (holder) { this._removeClone(holder) }
+      if (node._inShow && (holder !== node || holder._showIndex !== index)) {
+        if (holder && holder._isClone) { this._removeClone(holder) }
         node = this._getClone(node.index)
       }
-      else if (node._inShow) {
+      else if (node._inShow) {  // holder === node
         return
       }
 
@@ -339,30 +385,49 @@ export default {
     },
 
     _getClone (index) {
-      let arr = this._clones[index]
-      if (!arr) {
-        this._clones[index] = arr = []
-      }
-      if (arr.length <= 0) {
-        const origNode = this._cells[index].elm
-        const clone = origNode.cloneNode(true)
-        clone._isClone = true
-        clone._inShow = origNode._inShow
-        clone.index = origNode.index
-        clone.style.opacity = 0
-        clone.style.zIndex = 0
-        const ct = this.$refs.inner
-        ct.appendChild(clone)
-        arr.push(clone)
-      }
-      return arr.pop()
+      const arr = this._clones[index] || (this._clones[index] = [])
+      const origNode = this._cells[index].elm
+      const clone = origNode.cloneNode(true)
+      clone._isClone = true
+      clone._inShow = true
+      // clone._inShow = origNode._inShow
+      clone.index = origNode.index
+      clone.style.opacity = 0
+      clone.style.zIndex = 0
+      this.$refs.inner.appendChild(clone)
+      arr.push(clone)
+      return clone
+      // try {
+      //   let arr = this._clones[index]
+      //   if (!arr) {
+      //     this._clones[index] = arr = []
+      //   }
+      //   if (arr.length <= 0) {
+
+      //   }
+      //   return arr.pop()
+      // } catch (err) {
+      //   console.error('this._cells -> ', this._cells)
+      // }
     },
 
     _removeClone (node) {
-      const idx = node.index
-      this._hideNode(node)
-      const arr = this._clones[idx]
-      arr.push(node)
+      const cloneArr = this._clones[node.index]
+      let i
+      if (cloneArr && (i = cloneArr.indexOf(node)) > -1) {
+        cloneArr.splice(i, 1)
+      }
+      try {
+        node.parentNode.removeChild(node)
+      }
+      catch (err) {
+        // maybe cells has been updated and this clone node is already removed from the dom tree
+        // throught _clearClones method.
+      }
+      // const idx = node.index
+      // this._hideNode(node)
+      // const arr = this._clones[idx]
+      // arr.push(node)
     },
 
     _hideNode (node) {
@@ -410,7 +475,11 @@ export default {
      * replace a clone node with the original node if it's not in use.
      */
     _replaceClone (clone, pos) {
-      const origNode = this._cells[clone.index].elm
+      const origCell = this._cells[clone.index]
+      if (!origCell) {
+        return
+      }
+      const origNode = origCell.elm
       if (origNode._inShow) {
         return
       }
