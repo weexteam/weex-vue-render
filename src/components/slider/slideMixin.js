@@ -251,9 +251,9 @@ export default {
       }
 
       if (newIndex !== this._preIndex) {
-        this.$emit('change', weex.utils.createEvent(this.$el, 'change', {
+        weex.utils.dispatchNativeEvent(this.$el, 'change', {
           index: newIndex
-        }))
+        })
       }
     },
 
