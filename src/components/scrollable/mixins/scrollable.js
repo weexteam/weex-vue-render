@@ -180,9 +180,15 @@ export default {
       }
       else {
         if (el._sticky === true) return
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`[vue-render] header add sticky`, el)
+        }
         el._sticky = true
         if (!el._placeholder) {
-          el._placeholder = el.cloneNode(true)
+          const placeholder = el.cloneNode(true)
+          placeholder._origNode = el
+          placeholder.classList.add('weex-sticky-placeholder')
+          el._placeholder = placeholder
         }
         el.parentNode.insertBefore(el._placeholder, el)
         el.style.width = window.getComputedStyle(el).width
@@ -197,6 +203,9 @@ export default {
       ) {
         return
       }
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`[vue-render] header remove sticky`, el)
+      }
       el._sticky = false
       el.parentNode.removeChild(el._placeholder)
       el.classList.remove('weex-sticky')
@@ -205,12 +214,28 @@ export default {
     reloadStickyChildren () {
       const container = this.$el
       if (!container) return
+      const stickyChildren = []
       const children = container.querySelectorAll('[sticky]')
-      this._stickyChildren = children
       for (let i = 0, l = children.length; i < l; i++) {
         const child = children[i]
-        child._initOffsetTop = child.offsetTop
+        if (/weex-sticky-placeholder/.test(child.className)) {  // is a placeholder.
+          const origNode = child._origNode
+          if (
+            !origNode
+            || !origNode.parentNode
+            || origNode.parentNode !== child.parentNode
+          ) {
+            child.parentNode.removeChild(child)
+          }
+        }
+        else {  // is a sticky node.
+          stickyChildren.push(child)
+          if (!child._sticky) {
+            child._initOffsetTop = child.offsetTop
+          }
+        }
       }
+      this._stickyChildren = stickyChildren
     },
 
     handleScroll (event) {
