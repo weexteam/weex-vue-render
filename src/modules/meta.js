@@ -17,15 +17,24 @@
  * under the License.
  */
 
+import { resetViewport } from '../weex/viewport'
+
 const meta = {
   /**
-   * setViewport
-   * Changing viewport width at runtime is not supported. Please use weex-viewport meta
-   * tag to specify your viewport in your html file.
+   * setViewport.
+   * Changing viewport design width at runtime.
    */
   setViewport (options) {
-    console.warn(`[vue-render] meta.setViewport doesn't works as expected in web platform.`
-    + ` Please use <meta name="weex-viewport" content="xxx"> to specify your viewport width.`)
+    if (!options) {
+      console.error(`[vue-render] set viewport width invalid options: ${options}`)
+    }
+    const newWidth = parseInt(options.width)
+    if (!isNaN(newWidth) && newWidth > 0) {
+      resetViewport(options.width)
+    }
+    else {
+      console.error(`[vue-render] set viewport width invalid options.width: ${options.width}`)
+    }
   }
 }
 

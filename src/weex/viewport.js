@@ -60,12 +60,12 @@ const info = {
 /**
  * set root font-size for rem units. If already been set, just skip this.
  */
-function setRootFont (width, viewportWidth) {
+function setRootFont (width, viewportWidth, force) {
   const doc = window.document
   const rem = width * 750 / viewportWidth / 10
   if (!doc.documentElement) { return }
   const rootFontSize = doc.documentElement.style.fontSize
-  if (!rootFontSize) {
+  if (!rootFontSize || force) {
     doc.documentElement.style.fontSize = rem + 'px'
   }
   info.rem = rem
@@ -135,7 +135,7 @@ export function init (viewportWidth = width) {
      * 1. if set initial/maximum/mimimum-scale some how the page will have a bounce
      * effect when user drag the page towards horizontal axis.
      * 2. Due to compatibility reasons, not to use viewport meta anymore.
-     * 3. viewport meta should always be: 
+     * 3. viewport meta should always be:
      *    <meta name="viewport"
      *      content="width=device-width,
      *      initial-scale=1,
@@ -158,6 +158,7 @@ export function init (viewportWidth = width) {
  * @return new scale.
  */
 export function resetViewport (viewportWidth) {
+  setRootFont(screenWidth, viewportWidth, true)
   setMetaViewport(viewportWidth)
   const newScale = screenWidth / viewportWidth
   info.scale = newScale
