@@ -60,9 +60,9 @@ const info = {
 /**
  * set root font-size for rem units. If already been set, just skip this.
  */
-function setRootFont (width) {
+function setRootFont (width, viewportWidth) {
   const doc = window.document
-  const rem = width / 10
+  const rem = width * 750 / viewportWidth / 10
   if (!doc.documentElement) { return }
   const rootFontSize = doc.documentElement.style.fontSize
   if (!rootFontSize) {
@@ -75,6 +75,12 @@ function setMetaViewport (width) {
   if (!wxViewportMeta) {
     wxViewportMeta = document.createElement('meta')
     wxViewportMeta.setAttribute('name', 'weex-viewport')
+    const firstMeta = document.querySelector('meta')
+    const head = firstMeta && firstMeta.parentElement
+      || document.documentElement.children[0]
+    firstMeta
+      ? head.insertBefore(wxViewportMeta, firstMeta)
+      : head.appendChild(wxViewportMeta)
   }
   else {
     const metaWidth = parseInt(wxViewportMeta.getAttribute('content'))
@@ -113,7 +119,7 @@ export function init (viewportWidth = width) {
     }
 
     // set root font for rem.
-    setRootFont(screenWidth)
+    setRootFont(screenWidth, viewportWidth)
     setMetaViewport(viewportWidth)
 
     window.addEventListener('resize', resetDeviceHeight)
@@ -128,29 +134,14 @@ export function init (viewportWidth = width) {
     /**
      * 1. if set initial/maximum/mimimum-scale some how the page will have a bounce
      * effect when user drag the page towards horizontal axis.
-     * 2. <del>Due to compatibility reasons, not to use viewport meta anymore. Just bring
-     * a parameter scale into the style value processing.</del>
+     * 2. Due to compatibility reasons, not to use viewport meta anymore.
+     * 3. viewport meta should always be: 
+     *    <meta name="viewport"
+     *      content="width=device-width,
+     *      initial-scale=1,
+     *      maximum-scale=1,
+     *      user-scalable=no" />
      */
-
-    // const contents = [
-    //   `width=${viewportWidth}`,
-    //   // `initial-scale=${scale}`,
-    //   `maximum-scale=${scale}`,
-    //   `minimum-scale=${scale}`,
-    //   `user-scalable=no`
-    // ]
-
-    // let meta = doc.querySelector('meta[name="viewport"]')
-    // if (!meta) {
-    //   meta = doc.createElement('meta')
-    //   meta.setAttribute('name', 'viewport')
-    //   const head = document.querySelector('head')
-    //   if (head) {
-    //     head.appendChild(meta)
-    //   }
-    // }
-    // meta.setAttribute('content', contents.join(','))
-
     extend(info, {
       scale,
       rootValue: viewportWidth / 10,
