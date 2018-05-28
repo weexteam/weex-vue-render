@@ -50,7 +50,7 @@ export function initEnv (viewportInfo, envInfo) {
   /**
    * viewportInfo: scale, deviceWidth, deviceHeight. dpr
    */
-  return extend(env, viewportInfo)
+  return extend(viewportInfo, env)
 }
 
 // const viewportInfo = initViewport()

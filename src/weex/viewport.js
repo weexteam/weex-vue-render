@@ -69,6 +69,7 @@ function setRootFont (width, viewportWidth, force) {
     doc.documentElement.style.fontSize = rem + 'px'
   }
   info.rem = rem
+  info.rootValue = viewportWidth / 10
 }
 
 function setMetaViewport (width) {
