@@ -20,6 +20,8 @@ const utils = {}
 let endEvent
 let styleName
 
+const DESIGN_ROOT_VALUE = 75
+
 const EVENT_NAME_MAP = {
   transition: 'transitionend',
   WebkitTransition: 'webkitTransitionEnd',
@@ -83,7 +85,7 @@ function transitionOnce (vnode, config, callback) {
   }
   nextFrame(() => {
     dom.style.cssText
-      += toCSSText(styleObject2rem(config.styles, weex.config.env.rootValue) || {})
+      += toCSSText(styleObject2rem(config.styles, DESIGN_ROOT_VALUE) || {})
   })
 }
 
