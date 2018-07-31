@@ -263,16 +263,3 @@ export function rem2px (rem, rootValue) {
       + 'px'
   })
 }
-
-export function fixStyleUnit (styleName, value) {
-  const unitless = ['lineHeight']
-  if (unitless.indexOf(styleName) < 0 && typeof value === 'number') {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(`[weex-vue-render] style '${styleName}: ${value}' should end with 'px'.`)
-    }
-    return value + 'px'
-  }
-  else {
-    return value + ''
-  }
-}

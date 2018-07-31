@@ -18,7 +18,7 @@
  */
 
 import { getTransformer } from 'wxv-transformer'
-import { isArray, isPlainObject, fixStyleUnit } from '../utils'
+import { isArray, isPlainObject } from '../utils'
 import config from '../config'
 const { bindingStyleNamesForPx2Rem } = config
 
@@ -39,7 +39,7 @@ export default {
             value.hasOwnProperty(k)
             && bindingStyleNamesForPx2Rem.indexOf(k) > -1
           ) {
-            value[k] = weex.utils.px2rem(fixStyleUnit(k, value[k]), rootValue)
+            value[k] = weex.utils.px2rem(value[k] + '', rootValue)
           }
         }
         return value
