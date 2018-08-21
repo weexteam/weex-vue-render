@@ -20,6 +20,7 @@
 
 import './wx-env'
 import * as utils from '../utils'
+import config from '../config'
 
 const weexModules = {}
 const _roots = []
@@ -72,6 +73,7 @@ const weex = {
       switch (type) {
         case 'component':
           return typeof this._components[mod] !== 'undefined'
+            || config.weexBuiltInComponents.indexOf(mod) >= 0
         case 'module':
           const module = weexModules[mod]
           return module && method ? !!module[method] : !!module
@@ -81,6 +83,19 @@ const weex = {
       console.warn(`[vue-render] invalid argument for weex.support: ${feature}`)
       return null
     }
+  },
+
+  supports () {
+    return this.support.apply(this, arguments)
+  },
+
+  isRegisteredModule (moduleName, methodName) {
+    const feature = methodName ? `${moduleName}.${methodName}` : moduleName
+    return this.support('@module/' + feature)
+  },
+
+  isRegisteredComponent (componentName) {
+    return this.support('@component/' + componentName)
   },
 
   /**
