@@ -88,8 +88,8 @@ function getLoading () {
           return children
         }
         return children.filter(vnode => {
-          return vnode.componentOptions
-            && vnode.componentOptions.tag !== 'loading-indicator'
+          return !(vnode.componentOptions
+            && vnode.componentOptions.tag === 'loading-indicator')
         })
       }
     },
