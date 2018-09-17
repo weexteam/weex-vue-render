@@ -57,7 +57,7 @@ export function trimTextVNodes (vnodes) {
 
 // should share with precompiler.
 const metaMap = {
-  figure: ['img', 'image', 'figure'],
+  figure: ['img', 'image', 'gif', 'figure'],
   p: ['text', 'p'],
   div: ['container', 'div'],
   section: ['cell']
@@ -318,7 +318,7 @@ function transformAttrs (data, tag) {
     attrs = data.attrs = {}
   }
   attrs['weex-type'] = tag
-  if (tag === 'image') {
+  if (tag === 'image' || tag === 'gif') {
     const { src, resize } = attrs
     if (src) {
       attrs['data-img-src'] = src
