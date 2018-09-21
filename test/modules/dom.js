@@ -114,6 +114,33 @@ helper.initWithWeex('dom module', {
     document.body.removeChild(node)
   })
 
+  it('should getLayoutDirection be worked', () => {
+    const { getLayoutDirection } = domModule
+    const node = document.createElement('div')
+    const vnode = {
+      $el: node,
+      $refs: {}
+    }
+    let message
+    node.style.height = '100px'
+    node.style.width = '100px'
+    node.style.direction = 'rtl'
+    document.body.appendChild(node)
+    expect(getLayoutDirection).to.be.a('function')
+    // while node is an element
+    message = getLayoutDirection([vnode], callback)
+    expect(message).to.be.equal(node.style.direction)
+    expect(callback.callCount).to.be.equal(3)
+
+    // while node is a viewport
+    message = getLayoutDirection('viewport', callback)
+    expect(message).to.be.equal(
+      window.getComputedStyle(document.documentElement)['direction']
+    )
+    expect(callback.callCount).to.be.equal(4)
+    document.body.removeChild(node)
+  })
+
   it('should addRule be worked', () => {
     const {
       addRule

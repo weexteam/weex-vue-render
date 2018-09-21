@@ -1,7 +1,7 @@
 {
-  "name": "weex-vue-render",
+  "name": "@ali/weex-vue-render-rtl",
+  "version": "1.0.32-rtl",
   "description": "Web renderer for weex project written in Vue DSL.",
-  "version": "1.0.31",
   "license": "Apache-2.0",
   "main": "dist/index.common.js",
   "keywords": [

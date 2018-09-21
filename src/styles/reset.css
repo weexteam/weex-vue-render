@@ -16,12 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
+
 .weex-root,
 .weex-root * {
   color: initial;
   cursor: initial;
-  direction: initial;
+  direction: inherit;
   /* In chrome, there's a chance that user set the miximum font-size to 
   a abnormal smaller size. But actually the smaller size is never working
   if this font / font-size default value is set to initial. Perhaps a bug

@@ -40,6 +40,7 @@ export function initEnv (viewportInfo, envInfo) {
   const env = {
     platform: 'Web',
     weexVersion: 'process.env.WEEX_VERSION',
+    layoutDirection: 'ltr',
     userAgent: navigator.userAgent,
     appName: browserName,
     appVersion: browserVersion,
