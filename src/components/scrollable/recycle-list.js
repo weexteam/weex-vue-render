@@ -41,22 +41,17 @@ function getList (weex) {
 
     methods: {
       createChildren (h) {
-        // const slots = this.$scopedSlots.default || []
-        // this._cells = slots.filter(vnode => {
-        //   if (!vnode.tag && !vnode.componentOptions) return false
-        //   return true
-        // })
         const _vm = this
         return [
           h('article', {
             ref: 'inner',
             staticClass: 'weex-list-inner weex-ct'
           }, [
-            _vm._l(_vm._items, function(item, index) {
+            _vm._l(_vm._items, function (item, index) {
               return [
                 _vm._t(_vm.sloteName(item), null, {
-                    item: item,
-                    index: index
+                  item: item,
+                  index: index
                 })
               ]
             })
@@ -66,7 +61,8 @@ function getList (weex) {
       sloteName (item) {
         if (this._switch && item[this._switch]) {
           return item[this._switch]
-        } else {
+        }
+        else {
           return 'default'
         }
       }
@@ -76,7 +72,7 @@ function getList (weex) {
       this.weexType = 'list'
 
       this.$nextTick(() => {
-        // this.updateLayout()
+        this.updateLayout()
       })
 
       return createElement('main', {
