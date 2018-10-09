@@ -8,7 +8,7 @@
       var root = typeof window === 'object' ? 'vue-web/vue' : 'vue'
 
       return {
-        items: [           
+        items: [
           // common
           {name: root + '/hello', title: 'Hello World'},
           {name: root + '/style/index', title: 'Common Style'},
@@ -22,6 +22,7 @@
           {name: root + '/components/input', title: 'Input'},
           {name: root + '/components/scroller', title: 'Scroller'},
           {name: root + '/components/list', title: 'List'},
+          {name: root + '/components/recycle-list', title: 'RecycleList'},
           {name: root + '/components/waterfall', title: 'Waterfall'},
           {name: root + '/components/slider', title: 'Slider'},
           {name: root + '/components/a', title: 'A'},

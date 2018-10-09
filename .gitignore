@@ -75,3 +75,6 @@ examples/bundle-entry
 packages/
 public/
 test/bundles/
+
+# vscode
+.vscode
