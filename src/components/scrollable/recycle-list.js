@@ -27,14 +27,27 @@ function getList (weex) {
     name: 'weex-recycle-list',
     mixins: [scrollable],
     props: {
+      scrollDirection: {
+        type: [String],
+        default: 'vertical',
+        validator (value) {
+          return ['horizontal', 'vertical'].indexOf(value) !== -1
+        }
+      },
       _items: Array,
       _switch: String
     },
     computed: {
       wrapperClass () {
-        const classArray = ['weex-list', 'weex-list-wrapper', 'weex-ct']
+        const classArray = ['weex-recycle', 'weex-recycle-wrapper', 'weex-ct']
         this._refresh && classArray.push('with-refresh')
         this._loading && classArray.push('with-loading')
+        if (this.scrollDirection === 'horizontal') {
+          classArray.push('weex-recycle-horizontal')
+        }
+        else {
+          classArray.push('weex-recycle-vertical')
+        }
         return classArray.join(' ')
       }
     },
@@ -45,7 +58,7 @@ function getList (weex) {
         return [
           h('article', {
             ref: 'inner',
-            staticClass: 'weex-list-inner weex-ct'
+            staticClass: 'weex-recycle-inner weex-ct'
           }, [
             _vm._l(_vm._items, function (item, index) {
               return [
