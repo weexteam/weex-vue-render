@@ -18,12 +18,14 @@
  */
 
 body > .weex-list,
+body > .weex-recycle,
 body > .weex-scroller,
 body > .weex-waterfall {
   max-height: 100%;
 }
 
 .weex-list-wrapper,
+.weex-recycle-wrapper,
 .weex-scroller-wrapper,
 .weex-waterfall-wrapper {
   -webkit-overflow-scrolling: touch;
@@ -36,6 +38,7 @@ body > .weex-waterfall {
 }
 
 .weex-list-inner,
+.weex-recycle-inner,
 .weex-scroller-inner,
 .weex-waterfall-inner {
   -webkit-overflow-scrolling: touch;
@@ -50,12 +53,14 @@ body > .weex-waterfall {
   -webkit-box-orient: horizontal;
 }
 
-.weex-scroller-wrapper.weex-scroller-vertical {
+.weex-scroller-wrapper.weex-scroller-vertical,
+.weex-recycle-wrapper.weex-recycle-vertical  {
   overflow-x: hidden;
   overflow-y: scroll;
 }
 
-.weex-scroller-wrapper.weex-scroller-horizontal {
+.weex-scroller-wrapper.weex-scroller-horizontal,
+.weex-recycle-wrapper.weex-recycle-horizontal {
   overflow-x: scroll;
   overflow-y: hidden;
 }
@@ -65,7 +70,8 @@ body > .weex-waterfall {
   overflow-y: hidden;
 }
 
-.weex-scroller-horizontal .weex-scroller-inner {
+.weex-scroller-horizontal .weex-scroller-inner,
+.weex-recycle-horizontal .weex-recycle-inner {
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
   -moz-box-orient: horizontal;
