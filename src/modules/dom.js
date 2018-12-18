@@ -197,6 +197,32 @@ const dom = {
     return message
   },
   /**
+   * getLayoutDirection
+   * @param {String} vnode
+   * @param {Function} callback
+   */
+  getLayoutDirection: function (vnode, callback) {
+    const { isArray } = utils
+    if (isArray(vnode)) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(
+          '[vue-render] the ref passed to animation.transitionOnce is a array.'
+        )
+      }
+      vnode = vnode[0]
+    }
+    let direction = 'ltr'
+    if (vnode && vnode === 'viewport') {
+      direction = getComputedStyle(document.documentElement)['direction']
+    }
+    else if (vnode) {
+      const el = vnode instanceof HTMLElement ? vnode : vnode.$el
+      direction = getComputedStyle(el)['direction']
+    }
+    callback && callback(direction)
+    return direction
+  },
+  /**
    * for adding fontFace
    * @param {string} key fontFace
    * @param {object} styles rules
