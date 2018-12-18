@@ -74,7 +74,7 @@ function getAllStyles () {
 const allStyles = getAllStyles()
 
 export default {
-  scrollableTypes: ['scroller', 'list', 'waterfall'],
+  scrollableTypes: ['scroller', 'list', 'waterfall', 'recycle-list'],
   gestureEvents: [
     'panstart',
     'panmove',

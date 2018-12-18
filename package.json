@@ -1,7 +1,7 @@
 {
-  "name": "@ali/weex-vue-render-rtl",
-  "version": "1.0.32-rtl",
+  "name": "weex-vue-render",
   "description": "Web renderer for weex project written in Vue DSL.",
+  "version": "1.0.33",
   "license": "Apache-2.0",
   "main": "dist/index.common.js",
   "keywords": [
@@ -74,9 +74,9 @@
     "serve": "^6.0.6",
     "sinon": "^4.1.3",
     "sinon-chai": "^2.14.0",
-    "vue": "^2.4.3",
+    "vue": "^2.5.16",
     "vue-loader": "^12.2.2",
-    "vue-template-compiler": "^2.4.3",
+    "vue-template-compiler": "^2.5.16",
     "webpack": "^3.10.0",
     "webpack-bundle-analyzer": "^2.9.1",
     "webpack-dev-middleware": "^1.12.2",

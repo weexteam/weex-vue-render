@@ -25,6 +25,7 @@ import header from './header'
 import loading from './loading'
 import refresh from './refresh'
 import loadingIndicator from './loading-indicator'
+import recycleList from './recycle-list'
 
 import './style.css'
 
@@ -36,7 +37,8 @@ const modules = [
   header,
   loading,
   refresh,
-  loadingIndicator
+  loadingIndicator,
+  recycleList
 ]
 
 export default {
