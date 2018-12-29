@@ -110,8 +110,8 @@ export function init (viewportWidth = width) {
     }
 
     dpr = info.dpr = window.devicePixelRatio
-    screenWidth = doc.documentElement.clientWidth
-    screenHeight = doc.documentElement.clientHeight
+    screenWidth = window.screen.width
+    screenHeight = window.screen.height
 
     const resetDeviceHeight = function () {
       screenHeight = doc.documentElement.clientHeight
