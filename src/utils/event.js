@@ -64,7 +64,7 @@ export function createEvent (target, type, props) {
     })
   }
   catch (err) {
-    return extend({}, event, { target: target })
+    return extend(event, { target: target })
   }
   return event
 }
