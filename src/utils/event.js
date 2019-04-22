@@ -64,7 +64,7 @@ export function createEvent (target, type, props) {
     })
   }
   catch (err) {
-    return extend({}, event, { target: target })
+    return extend(event, { target: target })
   }
   return event
 }
@@ -88,7 +88,7 @@ export function createBubblesEvent (target, type, props) {
     })
   }
   catch (err) {
-    return extend({}, event, { target: target })
+    return extend(event, { target: target })
   }
   return event
 }
@@ -116,7 +116,7 @@ export function createCustomEvent (target, type, props) {
     })
   }
   catch (err) {
-    return extend({}, event, { target: target || null })
+    return extend(event, { target: target || null })
   }
 
   return event
