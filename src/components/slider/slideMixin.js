@@ -83,6 +83,10 @@ export default {
     this._slideTo(this.currentIndex)
     weex.utils.fireLazyload(this.$el, true)
   },
+  
+  destroyed () {
+    this._stopAutoPlay();
+  },
 
   methods: {
     _getWrapperSize () {

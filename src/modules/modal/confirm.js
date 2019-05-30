@@ -53,8 +53,8 @@ Confirm.prototype.createNodeContent = function () {
   const btnCancel = document.createElement('div')
   btnCancel.appendChild(document.createTextNode(this.cancelTitle))
   btnCancel.classList.add('btn-cancel', BUTTON_CLASS)
-  buttonGroup.appendChild(btnOk)
   buttonGroup.appendChild(btnCancel)
+  buttonGroup.appendChild(btnOk)
   this.node.appendChild(buttonGroup)
 }
 
